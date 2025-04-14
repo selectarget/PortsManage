@@ -114,20 +114,114 @@ def create_iptables_rules(rule):
     port_start = rule['port_start']
     port_end = rule['port_end']
     
-    # 创建DNAT规则
-    dnat_cmd = f"iptables -t nat -A PREROUTING -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"
-    success, output = execute_iptables_command(dnat_cmd)
-    if not success:
-        return False, f"DNAT规则创建失败: {output}"
+    # 用于存储已创建的规则，以便在失败时回滚
+    created_rules = []
     
-    # 创建MASQUERADE规则
+    # 创建DNAT规则 - VPN流量
+    dnat_vpn_cmd = f"iptables -t nat -A PREROUTING -i tun0 -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"
+    success, output = execute_iptables_command(dnat_vpn_cmd)
+    if not success:
+        return False, f"VPN DNAT规则创建失败: {output}"
+    created_rules.append(("nat", "PREROUTING", f"-i tun0 -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"))
+    
+    # 创建DNAT规则 - 本地流量
+    dnat_local_cmd = f"iptables -t nat -A OUTPUT -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"
+    success, output = execute_iptables_command(dnat_local_cmd)
+    if not success:
+        # 回滚之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"本地DNAT规则创建失败: {output}"
+    created_rules.append(("nat", "OUTPUT", f"-p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"))
+    
+    # 创建FORWARD规则 - VPN到内网
+    forward_vpn_cmd = f"iptables -A FORWARD -i tun0 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"
+    success, output = execute_iptables_command(forward_vpn_cmd)
+    if not success:
+        # 回滚之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"VPN FORWARD规则创建失败: {output}"
+    created_rules.append(("filter", "FORWARD", f"-i tun0 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"))
+    
+    # 创建FORWARD规则 - 内网本地
+    forward_local_cmd = f"iptables -A FORWARD -i ens33 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"
+    success, output = execute_iptables_command(forward_local_cmd)
+    if not success:
+        # 回滚之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"本地FORWARD规则创建失败: {output}"
+    created_rules.append(("filter", "FORWARD", f"-i ens33 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"))
+    
+    # 创建MASQUERADE规则 - 特定端口的流量伪装
     masq_cmd = f"iptables -t nat -A POSTROUTING -p tcp -d {target_ip} --dport {port_start}:{port_end} -j MASQUERADE"
     success, output = execute_iptables_command(masq_cmd)
     if not success:
-        # 回滚之前的规则
-        rollback_cmd = f"iptables -t nat -D PREROUTING -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"
-        execute_iptables_command(rollback_cmd)
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
         return False, f"MASQUERADE规则创建失败: {output}"
+    created_rules.append(("nat", "POSTROUTING", f"-p tcp -d {target_ip} --dport {port_start}:{port_end} -j MASQUERADE"))
+    
+    # 添加MSS调整规则（解决MTU问题）
+    mss_cmd = f"iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu"
+    success, output = execute_iptables_command(mss_cmd)
+    if not success:
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"MSS调整规则创建失败: {output}"
+    created_rules.append(("mangle", "FORWARD", f"-p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu"))
+    
+    # 添加允许已建立/相关的连接规则
+    established_cmd = f"iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+    success, output = execute_iptables_command(established_cmd)
+    if not success:
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"已建立连接规则创建失败: {output}"
+    created_rules.append(("filter", "FORWARD", f"-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"))
+    
+    # 添加出站流量伪装规则 - tun0接口
+    masq_tun0_cmd = f"iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE"
+    success, output = execute_iptables_command(masq_tun0_cmd)
+    if not success:
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"tun0出站流量伪装规则创建失败: {output}"
+    created_rules.append(("nat", "POSTROUTING", f"-o tun0 -j MASQUERADE"))
+    
+    # 添加出站流量伪装规则 - ens33接口（本地子网）
+    masq_ens33_cmd = f"iptables -t nat -A POSTROUTING -o ens33 -s 192.168.0.0/16 -j MASQUERADE"
+    success, output = execute_iptables_command(masq_ens33_cmd)
+    if not success:
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"ens33出站流量伪装规则创建失败: {output}"
+    created_rules.append(("nat", "POSTROUTING", f"-o ens33 -s 192.168.0.0/16 -j MASQUERADE"))
+    
+    # 添加允许内网到VPN的初始连接规则
+    init_conn_cmd = f"iptables -A FORWARD -i ens33 -o tun0 -m conntrack --ctstate NEW -j ACCEPT"
+    success, output = execute_iptables_command(init_conn_cmd)
+    if not success:
+        # 回滚所有之前的规则
+        for table, chain, rule_spec in created_rules:
+            rollback_cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(rollback_cmd)
+        return False, f"内网到VPN初始连接规则创建失败: {output}"
+    created_rules.append(("filter", "FORWARD", f"-i ens33 -o tun0 -m conntrack --ctstate NEW -j ACCEPT"))
     
     return True, "规则创建成功"
 
@@ -137,17 +231,44 @@ def delete_iptables_rules(rule):
     port_start = rule['port_start']
     port_end = rule['port_end']
     
-    # 删除DNAT规则
-    dnat_cmd = f"iptables -t nat -D PREROUTING -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"
-    success, output = execute_iptables_command(dnat_cmd)
-    if not success:
-        return False, f"DNAT规则删除失败: {output}"
+    # 存储需要删除的规则
+    rules_to_delete = [
+        # 基本端口转发规则
+        ("nat", "PREROUTING", f"-i tun0 -p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"),
+        ("nat", "OUTPUT", f"-p tcp --dport {port_start}:{port_end} -j DNAT --to-destination {target_ip}"),
+        ("filter", "FORWARD", f"-i tun0 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"),
+        ("filter", "FORWARD", f"-i ens33 -o ens33 -d {target_ip} -p tcp --dport {port_start}:{port_end} -m conntrack --ctstate NEW -j ACCEPT"),
+        ("nat", "POSTROUTING", f"-p tcp -d {target_ip} --dport {port_start}:{port_end} -j MASQUERADE")
+    ]
     
-    # 删除MASQUERADE规则
-    masq_cmd = f"iptables -t nat -D POSTROUTING -p tcp -d {target_ip} --dport {port_start}:{port_end} -j MASQUERADE"
-    success, output = execute_iptables_command(masq_cmd)
-    if not success:
-        return False, f"MASQUERADE规则删除失败: {output}"
+    # 删除所有规则，记录失败的规则
+    failed_rules = []
+    for table, chain, rule_spec in rules_to_delete:
+        cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+        success, output = execute_iptables_command(cmd)
+        if not success:
+            failed_rules.append((table, chain, rule_spec, output))
+    
+    # 如果有规则删除失败，返回错误信息
+    if failed_rules:
+        error_msg = "\n".join([f"{table} {chain} 规则删除失败: {output}" for table, chain, rule_spec, output in failed_rules])
+        return False, f"部分规则删除失败:\n{error_msg}"
+    
+    # 检查是否是最后一个规则，如果是，则删除全局规则
+    rules = load_rules()
+    if len(rules) <= 1:  # 当前规则是唯一的或最后一个
+        # 删除全局规则（这些规则是所有端口转发共享的）
+        global_rules = [
+            ("mangle", "FORWARD", "-p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu"),
+            ("filter", "FORWARD", "-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"),
+            ("nat", "POSTROUTING", "-o tun0 -j MASQUERADE"),
+            ("nat", "POSTROUTING", "-o ens33 -s 192.168.0.0/16 -j MASQUERADE"),
+            ("filter", "FORWARD", "-i ens33 -o tun0 -m conntrack --ctstate NEW -j ACCEPT")
+        ]
+        
+        for table, chain, rule_spec in global_rules:
+            cmd = f"iptables -t {table} -D {chain} {rule_spec}"
+            execute_iptables_command(cmd)  # 即使失败也继续删除其他规则
     
     return True, "规则删除成功"
 
