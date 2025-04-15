@@ -103,7 +103,7 @@ const loadRules = async () => {
   loading.value = true
   try {
     const response = await axios.get(`${API_BASE_URL}/rules`)
-    rulesList.value = response.data.rules
+    rulesList.value = response.data  // 直接使用返回的规则数组
   } catch (error) {
     ElMessage.error('加载规则列表失败：' + (error.response?.data?.detail || error.message))
   } finally {
