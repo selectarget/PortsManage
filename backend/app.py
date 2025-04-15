@@ -21,6 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 规则描述信息缓存
+rule_descriptions = {}  # 格式: {f"{port_start}:{port_end}:{target_ip}": "description"}
+
 # 端口规则模型
 class PortRule(BaseModel):
     target_ip: str
@@ -71,11 +74,15 @@ async def get_rules():
             port_start = int(m.group(1))
             port_end = int(m.group(2)) if m.group(2) else int(m.group(1))
             target_ip = m.group(3)
+            
+            # 从缓存获取描述信息
+            description = rule_descriptions.get(f"{port_start}:{port_end}:{target_ip}", "")
+            
             rules.append({
                 "target_ip": target_ip,
                 "port_start": port_start,
                 "port_end": port_end,
-                "description": ""
+                "description": description
             })
     return rules
 
@@ -103,6 +110,10 @@ async def create_rule(rule: PortRule):
                     rollback_cmd = commands[i].replace("-A", "-D")
                     subprocess.run(rollback_cmd, shell=True)
             raise HTTPException(status_code=500, detail=f"创建规则失败: {'; '.join(errors)}")
+
+    # 保存描述信息到缓存
+    if rule.description:
+        rule_descriptions[f"{rule.port_start}:{rule.port_end}:{rule.target_ip}"] = rule.description
 
     return rule.dict()
 
@@ -132,6 +143,11 @@ async def delete_rule(port_start: int, port_end: int):
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         if result.returncode != 0:
             errors.append(f"{cmd}: {result.stderr}")
+
+    # 从缓存中删除描述信息
+    cache_key = f"{port_start}:{port_end}:{target_rule['target_ip']}"
+    if cache_key in rule_descriptions:
+        del rule_descriptions[cache_key]
 
     if errors:
         raise HTTPException(status_code=500, detail=f"删除规则时出现错误: {'; '.join(errors)}")
