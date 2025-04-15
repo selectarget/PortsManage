@@ -260,32 +260,30 @@ async def create_rule(rule: PortRule):
 
 @app.delete("/api/rules/{port_start}/{port_end}")
 async def delete_rule(port_start: int, port_end: int):
-    rules = load_rules()
-
-    rule_to_delete = None
-    rule_index = -1
-    for i, r in enumerate(rules):
-        if r['port_start'] == port_start and r['port_end'] == port_end:
-            rule_to_delete = r
-            rule_index = i
-            break
-
-    if rule_index == -1 or rule_to_delete is None:
-        raise HTTPException(status_code=404, detail="规则不存在")
-
-    success, message = delete_specific_iptables_rules(rule_to_delete)
-    if not success:
-        print(f"删除iptables规则时出错，但仍将从JSON移除记录: {message}")
-
-    deleted_rule_data = rules.pop(rule_index)
-    save_rules(rules)
-
-    remove_global_rules_if_empty(len(rules))
-
-    if not success:
-        raise HTTPException(status_code=500, detail=f"部分iptables规则删除失败，但记录已从配置移除: {message}")
-
-    return deleted_rule_data
+    # 查询系统iptables规则
+    nat_rules = subprocess.run(
+        "iptables -t nat -S", shell=True, capture_output=True, text=True
+    ).stdout.splitlines()
+    deleted = False
+    errors = []
+    for rule in nat_rules:
+        # 匹配端口范围和目标IP
+        m = re.search(r"-A PREROUTING -i tun0 -p tcp(?: -m tcp)? --dport (\d+)(?::(\d+))? -j DNAT --to-destination ([0-9.]+)", rule)
+        if m:
+            r_start = int(m.group(1))
+            r_end = int(m.group(2)) if m.group(2) else int(m.group(1))
+            if r_start == port_start and r_end == port_end:
+                # 构造删除命令
+                del_cmd = rule.replace("-A ", "-D ", 1)
+                result = subprocess.run(f"iptables -t nat {del_cmd}", shell=True, capture_output=True, text=True)
+                if result.returncode == 0:
+                    deleted = True
+                else:
+                    errors.append(result.stderr)
+    if deleted:
+        return {"success": True}
+    else:
+        return {"success": False, "error": errors or "未找到匹配规则"}
 
 @app.post("/api/iptables/delete")
 async def delete_iptables_rule(rule: str = Body(...)):

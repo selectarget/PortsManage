@@ -40,24 +40,6 @@
         </div>
       </template>
       <el-table :data="rulesList" style="width: 100%" v-loading="loading" row-key="port_start">
-        <el-table-column type="expand">
-          <template #default="props">
-            <div class="iptables-commands">
-              <h4>关联的 iptables 命令:</h4>
-              <div v-if="props.row.iptables_commands && props.row.iptables_commands.length > 0">
-                <ul>
-                  <li v-for="(cmd, index) in props.row.iptables_commands" :key="index">
-                    <strong>创建:</strong> <pre><code>{{ cmd.create }}</code></pre>
-                    <strong>删除:</strong> <pre><code>{{ cmd.delete }}</code></pre>
-                  </li>
-                </ul>
-              </div>
-              <div v-else>
-                <p>未找到关联的 iptables 命令记录。</p>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column prop="target_ip" label="目标IP地址" width="180"></el-table-column>
         <el-table-column prop="port_start" label="起始端口" width="120"></el-table-column>
         <el-table-column prop="port_end" label="结束端口" width="120"></el-table-column>
