@@ -208,8 +208,27 @@ def delete_specific_iptables_rules(rule_data):
 # API路由
 @app.get("/api/rules")
 async def get_rules():
-    # 直接返回系统当前的端口转发规则
-    return await list_iptables_rules()
+    # 查询系统iptables规则并返回结构化数据
+    nat_rules = subprocess.run(
+        "iptables -t nat -S", shell=True, capture_output=True, text=True
+    ).stdout.splitlines()
+    rules = []
+    for rule in nat_rules:
+        # 只处理 DNAT 端口转发规则
+        # 示例: -A PREROUTING -i tun0 -p tcp -m tcp --dport 10000:10005 -j DNAT --to-destination 192.168.31.128
+        import re
+        m = re.search(r"--dport (\d+)(?::(\d+))? -j DNAT --to-destination ([0-9.]+)", rule)
+        if m:
+            port_start = int(m.group(1))
+            port_end = int(m.group(2)) if m.group(2) else int(m.group(1))
+            target_ip = m.group(3)
+            rules.append({
+                "target_ip": target_ip,
+                "port_start": port_start,
+                "port_end": port_end,
+                "description": ""
+            })
+    return rules
 
 @app.get("/api/network/tun0-ip", response_model=Dict[str, Optional[str]])
 async def get_tun0_ip_route():
