@@ -39,7 +39,25 @@
           <el-button type="primary" @click="loadRules">刷新</el-button>
         </div>
       </template>
-      <el-table :data="rulesList" style="width: 100%" v-loading="loading">
+      <el-table :data="rulesList" style="width: 100%" v-loading="loading" row-key="port_start">
+        <el-table-column type="expand">
+          <template #default="props">
+            <div class="iptables-commands">
+              <h4>关联的 iptables 命令:</h4>
+              <div v-if="props.row.iptables_commands && props.row.iptables_commands.length > 0">
+                <ul>
+                  <li v-for="(cmd, index) in props.row.iptables_commands" :key="index">
+                    <strong>创建:</strong> <pre><code>{{ cmd.create }}</code></pre>
+                    <strong>删除:</strong> <pre><code>{{ cmd.delete }}</code></pre>
+                  </li>
+                </ul>
+              </div>
+              <div v-else>
+                <p>未找到关联的 iptables 命令记录。</p>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="target_ip" label="目标IP地址" width="180"></el-table-column>
         <el-table-column prop="port_start" label="起始端口" width="120"></el-table-column>
         <el-table-column prop="port_end" label="结束端口" width="120"></el-table-column>
@@ -230,5 +248,64 @@ onMounted(() => {
 .info-value {
   font-family: monospace;
   font-size: 1.1em;
+}
+
+.iptables-commands {
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  margin: 5px 0;
+}
+
+.iptables-commands h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #606266;
+}
+
+.iptables-commands ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.iptables-commands li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+.iptables-commands li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.iptables-commands strong {
+  display: block;
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.iptables-commands pre {
+  background-color: #eef1f6;
+  padding: 5px 8px;
+  border-radius: 3px;
+  margin: 0;
+  white-space: pre-wrap; /* 允许换行 */
+  word-wrap: break-word; /* 强制换行 */
+  font-family: monospace;
+  font-size: 12px;
+  color: #303133;
+}
+
+.iptables-commands code {
+ font-family: monospace;
+}
+
+.iptables-commands p {
+  color: #909399;
+  font-size: 13px;
 }
 </style>
