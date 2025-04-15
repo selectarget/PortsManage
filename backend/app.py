@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, validator, Field
@@ -10,8 +10,11 @@ import os
 import json
 from pathlib import Path
 import traceback
+from fastapi import APIRouter
 
 app = FastAPI(title="端口转发管理系统")
+
+router = APIRouter()
 
 # 配置CORS
 app.add_middleware(
@@ -22,12 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 数据存储路径
-DATA_DIR = Path(os.path.dirname(os.path.abspath(__file__))) / "data"
-DATA_FILE = DATA_DIR / "port_rules.json"
 
-# 确保数据目录存在
-DATA_DIR.mkdir(exist_ok=True)
 
 # 端口规则模型
 class PortRule(BaseModel):
@@ -269,6 +267,40 @@ async def delete_rule(port_start: int, port_end: int):
 
     return deleted_rule_data
 
+@app.post("/api/iptables/delete")
+async def delete_iptables_rule(rule: str = Body(...)):
+    # 只允许删除以 -A 开头的规则
+    if not rule.startswith("-A "):
+        return {"error": "只能删除-A开头的规则"}
+    # 替换-A为-D
+    delete_cmd = rule.replace("-A ", "-D ", 1)
+    result = subprocess.run(
+        f"iptables -t nat {delete_cmd}", shell=True, capture_output=True, text=True
+    )
+    if result.returncode == 0:
+        return {"success": True}
+    else:
+        return {"success": False, "error": result.stderr}
+
+@router.get("/api/iptables/rules")
+async def list_iptables_rules():
+    # 获取 NAT 表规则
+    nat_rules = subprocess.run(
+        "iptables -t nat -S", shell=True, capture_output=True, text=True
+    ).stdout.splitlines()
+    # 获取 FORWARD 链规则
+    forward_rules = subprocess.run(
+        "iptables -S FORWARD", shell=True, capture_output=True, text=True
+    ).stdout.splitlines()
+
+    # 只筛选端口转发相关的规则（如 -A PREROUTING ... --dport ... -j DNAT ...）
+    port_forward_rules = []
+    for rule in nat_rules + forward_rules:
+        if "--dport" in rule or "-j DNAT" in rule or "-j MASQUERADE" in rule:
+            port_forward_rules.append(rule)
+
+    return {"rules": port_forward_rules}
+
 @app.middleware("http")
 async def errors_handling(request: Request, call_next):
     try:
@@ -278,6 +310,8 @@ async def errors_handling(request: Request, call_next):
             status_code=500,
             content={"detail": f"服务器内部错误: {str(exc)}"},
         )
+
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn

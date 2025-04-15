@@ -73,9 +73,18 @@ ipaddress>=1.0.23
 
 然后执行：
 
+
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
+
+如果是新版本python需要创建一个和虚拟环境：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
 
 ### 前端依赖
 
