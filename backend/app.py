@@ -208,7 +208,8 @@ def delete_specific_iptables_rules(rule_data):
 # API路由
 @app.get("/api/rules")
 async def get_rules():
-    return load_rules()
+    # 直接返回系统当前的端口转发规则
+    return await list_iptables_rules()
 
 @app.get("/api/network/tun0-ip", response_model=Dict[str, Optional[str]])
 async def get_tun0_ip_route():
