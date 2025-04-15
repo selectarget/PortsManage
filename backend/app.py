@@ -174,6 +174,56 @@ async def errors_handling(request: Request, call_next):
             content={"detail": f"服务器内部错误: {str(exc)}"},
         )
 
+# 添加初始化函数
+async def initialize_iptables():
+    """初始化基础 iptables 规则"""
+    # 首先清空所有旧规则
+    clean_rules = [
+        "iptables -F",  # 清空 filter 表
+        "iptables -t nat -F",  # 清空 nat 表
+        "iptables -t mangle -F"  # 清空 mangle 表
+    ]
+    
+    # 执行清空操作
+    for rule in clean_rules:
+        try:
+            result = subprocess.run(rule, shell=True, capture_output=True, text=True)
+            if result.returncode != 0:
+                print(f"清空规则失败: {rule}")
+                print(f"错误信息: {result.stderr}")
+        except Exception as e:
+            print(f"清空规则出错: {rule}")
+            print(f"错误信息: {str(e)}")
+
+    # 添加基础规则
+    base_rules = [
+        # NAT 和流量伪装
+        "iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE",
+        "iptables -t nat -A POSTROUTING -o ens33 -s 192.168.0.0/16 -j MASQUERADE",
+        
+        # MSS 调整
+        "iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu",
+        
+        # 流量转发规则
+        "iptables -A FORWARD -i ens33 -o tun0 -m conntrack --ctstate NEW -j ACCEPT",
+        "iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+    ]
+    
+    # 添加基础规则
+    for rule in base_rules:
+        try:
+            result = subprocess.run(rule, shell=True, capture_output=True, text=True)
+            if result.returncode != 0:
+                print(f"添加规则失败: {rule}")
+                print(f"错误信息: {result.stderr}")
+        except Exception as e:
+            print(f"添加规则出错: {rule}")
+            print(f"错误信息: {str(e)}")
+
 if __name__ == "__main__":
     import uvicorn
+    # 初始化 iptables 基础规则
+    import asyncio
+    asyncio.run(initialize_iptables())
+    # 启动服务器
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

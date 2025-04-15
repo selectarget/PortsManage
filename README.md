@@ -184,3 +184,73 @@ server {
 - 端口范围不能超过10个端口
 - 端口范围不能与现有规则重叠
 - 系统使用iptables实现端口转发，需要在Linux系统上运行并具有足够的权限
+
+
+# 手动操作：
+
+完整的规则：
+
+### **1. 清空旧规则（谨慎操作）**
+
+
+```shell
+sudo iptables -F && sudo iptables -t nat -F
+sudo iptables -t mangle -F  # 清空 mangle 表（避免残留规则干扰）
+```
+
+---
+
+### **2. NAT 和流量伪装（关键）**
+
+
+
+```shell
+# 出站流量伪装（通过 tun0 VPN 接口）
+sudo iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
+
+# 本地子网出站流量伪装（通过 ens33 物理接口）
+sudo iptables -t nat -A POSTROUTING -o ens33 -s 192.168.0.0/16 -j MASQUERADE
+```
+
+---
+
+### **3. MSS 调整（解决 MTU 问题）**
+
+
+```shell
+sudo iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -o tun0 -j TCPMSS --clamp-mss-to-pmtu
+```
+
+---
+
+### **4. 流量转发规则（核心转发逻辑）**
+
+
+```shell
+# 允许初始连接（内网 → VPN）
+sudo iptables -A FORWARD -i ens33 -o tun0 -m conntrack --ctstate NEW -j ACCEPT
+
+# 允许目标为 192.168.31.114 的新连接（VPN → 内网 + 内网本地）
+sudo iptables -A FORWARD -i tun0 -o ens33 -d 192.168.31.128 -p tcp --dport 10000:10005 -m conntrack --ctstate NEW -j ACCEPT
+sudo iptables -A FORWARD -i ens33 -o ens33 -d 192.168.31.128 -p tcp --dport 10000:10005 -m conntrack --ctstate NEW -j ACCEPT
+
+# 允许已建立/相关的连接（双向通用，合并重复规则）
+sudo iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+```
+
+---
+
+### **5. DNAT 端口转发（外部/本地流量重定向）**
+
+
+```shell
+# 外部流量（通过 tun0 进入）
+sudo iptables -t nat -A PREROUTING -i tun0 -p tcp --dport 10000:10005 -j DNAT --to-destination 192.168.31.128
+
+# 本地流量（OUTPUT 链）
+sudo iptables -t nat -A OUTPUT -p tcp --dport 10006:10005 -j DNAT --to-destination 192.168.31.128
+```
+
+
+
+
