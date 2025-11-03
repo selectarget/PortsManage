@@ -11,7 +11,7 @@ var element = require('./element.js');
 
 
 
-exports.attemptFocus = aria.attemptFocus;
+exports.focusElement = aria.focusElement;
 exports.focusNode = aria.focusNode;
 exports.getSibling = aria.getSibling;
 exports.isFocusable = aria.isFocusable;
@@ -20,6 +20,8 @@ exports.isVisible = aria.isVisible;
 exports.obtainAllFocusableElements = aria.obtainAllFocusableElements;
 exports.triggerEvent = aria.triggerEvent;
 exports.composeEventHandlers = event.composeEventHandlers;
+exports.getEventCode = event.getEventCode;
+exports.getEventKey = event.getEventKey;
 exports.whenMouse = event.whenMouse;
 exports.getClientXY = position.getClientXY;
 exports.getOffsetTop = position.getOffsetTop;

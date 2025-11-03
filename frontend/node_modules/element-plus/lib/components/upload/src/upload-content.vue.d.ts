@@ -13,12 +13,12 @@ declare const __VLS_component: import("vue").DefineComponent<{
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
-    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
-    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
@@ -109,12 +109,12 @@ declare const __VLS_component: import("vue").DefineComponent<{
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
-    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
-    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
@@ -200,17 +200,17 @@ declare const __VLS_component: import("vue").DefineComponent<{
     readonly name: string;
     readonly onError: (err: import("./ajax.js").UploadAjaxError, rawFile: UploadRawFile) => void;
     readonly onProgress: (evt: import("./upload").UploadProgressEvent, rawFile: UploadRawFile) => void;
-    readonly action: string;
-    readonly withCredentials: boolean;
     readonly method: string;
-    readonly showFileList: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
+    readonly action: string;
     readonly accept: string;
+    readonly withCredentials: boolean;
+    readonly showFileList: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
     readonly fileList: import("./upload").UploadUserFile[];
     readonly autoUpload: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
     readonly listType: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "picture" | "text" | "picture-card", unknown>;
     readonly httpRequest: import("./upload").UploadRequestHandler;
     readonly beforeUpload: (rawFile: UploadRawFile) => import("element-plus/es/utils").Awaitable<void | undefined | null | boolean | File | Blob>;
-    readonly onRemove: (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    readonly onRemove: (file: UploadFile | UploadRawFile) => void;
     readonly onSuccess: (response: any, rawFile: UploadRawFile) => unknown;
     readonly onExceed: (files: File[], uploadFiles: import("./upload").UploadUserFile[]) => void;
     readonly onStart: (rawFile: UploadRawFile) => void;

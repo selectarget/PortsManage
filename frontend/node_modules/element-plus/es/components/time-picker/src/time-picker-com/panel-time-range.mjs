@@ -1,6 +1,7 @@
-import { defineComponent, inject, computed, ref, openBlock, createElementBlock, normalizeClass, unref, createElementVNode, toDisplayString, createVNode, createCommentVNode } from 'vue';
+import { defineComponent, inject, computed, ref, openBlock, createElementBlock, normalizeClass, unref, createElementVNode, toDisplayString, createVNode, createCommentVNode, nextTick } from 'vue';
 import dayjs from 'dayjs';
 import { union } from 'lodash-unified';
+import { PICKER_BASE_INJECTION_KEY } from '../constants.mjs';
 import { panelTimeRangeProps } from '../props/panel-time-range.mjs';
 import { useTimePanel } from '../composables/use-time-panel.mjs';
 import { useOldValue, buildAvailableTimeSlotGetter } from '../composables/use-time-picker.mjs';
@@ -8,6 +9,7 @@ import TimeSpinner from './basic-time-spinner.mjs';
 import _export_sfc from '../../../../_virtual/plugin-vue_export-helper.mjs';
 import { useLocale } from '../../../../hooks/use-locale/index.mjs';
 import { useNamespace } from '../../../../hooks/use-namespace/index.mjs';
+import { getEventCode } from '../../../../utils/dom/event.mjs';
 import { isArray } from '@vue/shared';
 import { EVENT_CODE } from '../../../../constants/aria.mjs';
 
@@ -27,7 +29,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const { t, lang } = useLocale();
     const nsTime = useNamespace("time");
     const nsPicker = useNamespace("picker");
-    const pickerBase = inject("EP_PICKER_BASE");
+    const pickerBase = inject(PICKER_BASE_INJECTION_KEY);
     const {
       arrowControl,
       disabledHours,
@@ -51,7 +53,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const endTime = computed(() => props.parsedValue[1]);
     const oldValue = useOldValue(props);
     const handleCancel = () => {
-      emit("pick", oldValue.value, false);
+      const old = oldValue.value;
+      emit("pick", old, false);
+      nextTick(() => {
+        oldValue.value = old;
+      });
     };
     const showSeconds = computed(() => {
       return props.format.includes("ss");
@@ -110,7 +116,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
     };
     const handleKeydown = (event) => {
-      const code = event.code;
+      const code = getEventCode(event);
       const { left, right, up, down } = EVENT_CODE;
       if ([left, right].includes(code)) {
         const step = code === left ? -1 : 1;
@@ -183,14 +189,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
       return dayjs(days, props.format).locale(lang.value);
     };
-    const formatToString = (days) => {
-      if (!days)
-        return null;
-      if (isArray(days)) {
-        return days.map((d) => d.format(props.format));
-      }
-      return days.format(props.format);
-    };
     const getDefaultValue = () => {
       if (isArray(defaultValue)) {
         return defaultValue.map((d) => dayjs(d).locale(lang.value));
@@ -198,7 +196,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       const defaultDay = dayjs(defaultValue).locale(lang.value);
       return [defaultDay, defaultDay.add(60, "m")];
     };
-    emit("set-picker-option", ["formatToString", formatToString]);
     emit("set-picker-option", ["parseUserInput", parseUserInput]);
     emit("set-picker-option", ["isValidValue", isValidValue]);
     emit("set-picker-option", ["handleKeydownInput", handleKeydown]);

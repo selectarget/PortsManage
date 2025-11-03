@@ -415,10 +415,10 @@ const createGrid = ({
         const Inner = vue.resolveDynamicComponent(props.innerElement);
         const children = renderItems();
         return [
-          vue.h(Inner, {
+          vue.h(Inner, vue.mergeProps(props.innerProps, {
             style: vue.unref(innerStyle),
             ref: innerRef
-          }, !shared.isString(Inner) ? {
+          }), !shared.isString(Inner) ? {
             default: () => children
           } : children)
         ];

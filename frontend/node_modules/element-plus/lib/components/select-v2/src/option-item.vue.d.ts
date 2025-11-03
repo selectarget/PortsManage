@@ -31,6 +31,7 @@ declare const _default: import("vue").DefineComponent<{
         cssVarBlock: (object: Record<string, string>) => Record<string, string>;
         cssVarBlockName: (name: string) => string;
     };
+    contentId: import("vue").Ref<string>;
     hoverItem: () => void;
     selectOptionClick: () => void;
     getLabel: (option: import("./select.types").Option) => any;

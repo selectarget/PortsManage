@@ -3,7 +3,8 @@ import { getKeysMap, getRowIdentity, toggleRowStatus, getColumnById, getColumnBy
 import useExpand from './expand.mjs';
 import useCurrent from './current.mjs';
 import useTree from './tree.mjs';
-import { hasOwn, isArray, isString } from '@vue/shared';
+import { hasOwn, isString, isArray } from '@vue/shared';
+import { castArray } from 'lodash-unified';
 
 const sortData = (data, states) => {
   const sortingColumn = states.sortingColumn;
@@ -81,29 +82,29 @@ function useWatcher() {
     });
   };
   const updateColumns = () => {
-    var _a2, _b;
     _columns.value.forEach((column) => {
       updateChildFixed(column);
     });
-    fixedColumns.value = _columns.value.filter((column) => column.type !== "selection" && [true, "left"].includes(column.fixed));
+    fixedColumns.value = _columns.value.filter((column) => [true, "left"].includes(column.fixed));
+    const selectColumn = _columns.value.find((column) => column.type === "selection");
     let selectColFixLeft;
-    if (((_b = (_a2 = _columns.value) == null ? void 0 : _a2[0]) == null ? void 0 : _b.type) === "selection") {
-      const selectColumn = _columns.value[0];
-      selectColFixLeft = [true, "left"].includes(selectColumn.fixed) || fixedColumns.value.length && selectColumn.fixed !== "right";
-      if (selectColFixLeft) {
+    if (selectColumn && selectColumn.fixed !== "right" && !fixedColumns.value.includes(selectColumn)) {
+      const selectColumnIndex = _columns.value.indexOf(selectColumn);
+      if (selectColumnIndex === 0 && fixedColumns.value.length) {
         fixedColumns.value.unshift(selectColumn);
+        selectColFixLeft = true;
       }
     }
     rightFixedColumns.value = _columns.value.filter((column) => column.fixed === "right");
     const notFixedColumns = _columns.value.filter((column) => (selectColFixLeft ? column.type !== "selection" : true) && !column.fixed);
-    originColumns.value = [].concat(fixedColumns.value).concat(notFixedColumns).concat(rightFixedColumns.value);
+    originColumns.value = Array.from(fixedColumns.value).concat(notFixedColumns).concat(rightFixedColumns.value);
     const leafColumns2 = doFlattenColumns(notFixedColumns);
     const fixedLeafColumns2 = doFlattenColumns(fixedColumns.value);
     const rightFixedLeafColumns2 = doFlattenColumns(rightFixedColumns.value);
     leafColumnsLength.value = leafColumns2.length;
     fixedLeafColumnsLength.value = fixedLeafColumns2.length;
     rightFixedLeafColumnsLength.value = rightFixedLeafColumns2.length;
-    columns.value = [].concat(fixedLeafColumns2).concat(leafColumns2).concat(rightFixedLeafColumns2);
+    columns.value = Array.from(fixedLeafColumns2).concat(leafColumns2).concat(rightFixedLeafColumns2);
     isComplex.value = fixedColumns.value.length > 0 || rightFixedColumns.value.length > 0;
   };
   const scheduleLayout = (needUpdateColumns, immediate = false) => {
@@ -132,10 +133,12 @@ function useWatcher() {
     }
   };
   const cleanSelection = () => {
+    var _a2, _b;
     let deleted;
     if (rowKey.value) {
       deleted = [];
-      const dataMap = getKeysMap(data.value, rowKey.value);
+      const childrenKey = (_b = (_a2 = instance == null ? void 0 : instance.store) == null ? void 0 : _a2.states) == null ? void 0 : _b.childrenColumnName.value;
+      const dataMap = getKeysMap(data.value, rowKey.value, true, childrenKey);
       for (const key in selectedMap.value) {
         if (hasOwn(selectedMap.value, key) && !dataMap[key]) {
           deleted.push(selectedMap.value[key].row);
@@ -159,7 +162,7 @@ function useWatcher() {
       children: (_b = (_a2 = instance == null ? void 0 : instance.store) == null ? void 0 : _a2.states) == null ? void 0 : _b.childrenColumnName.value,
       checkStrictly: (_d = (_c = instance == null ? void 0 : instance.store) == null ? void 0 : _c.states) == null ? void 0 : _d.checkStrictly.value
     };
-    const changed = toggleRowStatus(selection.value, row, selected, treeProps, ignoreSelectable ? void 0 : selectable.value, data.value.indexOf(row));
+    const changed = toggleRowStatus(selection.value, row, selected, treeProps, ignoreSelectable ? void 0 : selectable.value, data.value.indexOf(row), rowKey.value);
     if (changed) {
       const newSelection = (selection.value || []).slice();
       if (emitChange) {
@@ -182,7 +185,7 @@ function useWatcher() {
     };
     data.value.forEach((row, index) => {
       const rowIndex = index + childrenCount;
-      if (toggleRowStatus(selection.value, row, value, treeProps, selectable.value, rowIndex)) {
+      if (toggleRowStatus(selection.value, row, value, treeProps, selectable.value, rowIndex, rowKey2)) {
         selectionChanged = true;
       }
       childrenCount += getChildrenCount(getRowIdentity(row, rowKey2));
@@ -191,15 +194,6 @@ function useWatcher() {
       instance.emit("selection-change", selection.value ? selection.value.slice() : []);
     }
     instance.emit("select-all", (selection.value || []).slice());
-  };
-  const updateSelectionByRowKey = () => {
-    data.value.forEach((row) => {
-      const rowId = getRowIdentity(row, rowKey.value);
-      const rowInfo = selectedMap.value[rowId];
-      if (rowInfo) {
-        selection.value[rowInfo.index] = row;
-      }
-    });
   };
   const updateAllSelected = () => {
     var _a2;
@@ -246,12 +240,9 @@ function useWatcher() {
     }
     return count;
   };
-  const updateFilters = (columns2, values) => {
-    if (!isArray(columns2)) {
-      columns2 = [columns2];
-    }
+  const updateFilters = (column, values) => {
     const filters_ = {};
-    columns2.forEach((col) => {
+    castArray(column).forEach((col) => {
       filters.value[col.id] = values;
       filters_[col.columnKey || col.id] = values;
     });
@@ -283,14 +274,15 @@ function useWatcher() {
     filteredData.value = sourceData;
   };
   const execSort = () => {
-    data.value = sortData(filteredData.value, {
+    var _a2;
+    data.value = sortData((_a2 = filteredData.value) != null ? _a2 : [], {
       sortingColumn: sortingColumn.value,
       sortProp: sortProp.value,
       sortOrder: sortOrder.value
     });
   };
   const execQuery = (ignore = void 0) => {
-    if (!(ignore && ignore.filter)) {
+    if (!(ignore == null ? void 0 : ignore.filter)) {
       execFilter();
     }
     execSort();
@@ -398,7 +390,6 @@ function useWatcher() {
     toggleRowSelection,
     _toggleAllSelection,
     toggleAllSelection: null,
-    updateSelectionByRowKey,
     updateAllSelected,
     updateFilters,
     updateCurrentRow,

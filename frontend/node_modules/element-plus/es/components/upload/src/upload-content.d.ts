@@ -1,4 +1,4 @@
-import type { ExtractPropTypes } from 'vue';
+import type { ExtractPropTypes, __ExtractPublicPropTypes } from 'vue';
 import type { UploadFile, UploadProgressEvent, UploadRawFile } from './upload';
 import type UploadContent from './upload-content.vue';
 import type { UploadAjaxError } from './ajax';
@@ -12,12 +12,12 @@ export declare const uploadContentProps: {
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
-    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    readonly onRemove: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
-    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void) | {
-        (): (file: UploadFile | UploadRawFile, rawFile?: UploadRawFile) => void;
+    } | ((new (...args: any[]) => (file: UploadFile | UploadRawFile) => void) | (() => (file: UploadFile | UploadRawFile) => void) | {
+        (): (file: UploadFile | UploadRawFile) => void;
         new (): any;
         readonly prototype: any;
     })[], unknown, unknown, () => void, boolean>;
@@ -97,4 +97,5 @@ export declare const uploadContentProps: {
     readonly limit: NumberConstructor;
 };
 export type UploadContentProps = ExtractPropTypes<typeof uploadContentProps>;
-export type UploadContentInstance = InstanceType<typeof UploadContent>;
+export type UploadContentPropsPublic = __ExtractPublicPropTypes<typeof uploadContentProps>;
+export type UploadContentInstance = InstanceType<typeof UploadContent> & unknown;

@@ -1,4 +1,5 @@
 import { triggerEvent } from '../../../../utils/dom/aria.mjs';
+import { getEventCode } from '../../../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../../../constants/aria.mjs';
 
 class SubMenu {
@@ -26,8 +27,9 @@ class SubMenu {
     const parentNode = this.parent.domNode;
     Array.prototype.forEach.call(this.subMenuItems, (el) => {
       el.addEventListener("keydown", (event) => {
+        const code = getEventCode(event);
         let prevDef = false;
-        switch (event.code) {
+        switch (code) {
           case EVENT_CODE.down: {
             this.gotoSubIndex(this.subIndex + 1);
             prevDef = true;

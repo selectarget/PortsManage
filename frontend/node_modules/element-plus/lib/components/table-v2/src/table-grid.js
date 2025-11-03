@@ -150,7 +150,13 @@ const TableGrid = vue.defineComponent({
       scrollToRow,
       scrollLeft
     } = useTableGrid(props);
-    vue.provide("tableV2GridScrollLeft", scrollLeft);
+    vue.provide(tokens.TABLE_V2_GRID_INJECTION_KEY, scrollLeft);
+    vue.onActivated(async () => {
+      var _a;
+      await vue.nextTick();
+      const scrollTop = (_a = bodyRef.value) == null ? void 0 : _a.states.scrollTop;
+      scrollTop && scrollToTop(Math.round(scrollTop) + 1);
+    });
     expose({
       forceUpdate,
       totalHeight,

@@ -138,7 +138,7 @@ declare const __VLS_component: import("vue").DefineComponent<{
     /** @description select the file manually */
     handleStart: (rawFile: import("./upload").UploadRawFile) => void;
     /** @description remove the file manually */
-    handleRemove: (file: import("./upload").UploadFile | import("./upload").UploadRawFile, rawFile?: import("./upload").UploadRawFile) => void;
+    handleRemove: (file: import("./upload").UploadFile | import("./upload").UploadRawFile) => void;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     readonly beforeUpload: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (rawFile: import("./upload").UploadRawFile) => import("element-plus/es/utils").Awaitable<void | undefined | null | boolean | File | Blob>) | (() => (rawFile: import("./upload").UploadRawFile) => import("element-plus/es/utils").Awaitable<void | undefined | null | boolean | File | Blob>) | {
         (): (rawFile: import("./upload").UploadRawFile) => import("element-plus/es/utils").Awaitable<void | undefined | null | boolean | File | Blob>;
@@ -262,11 +262,11 @@ declare const __VLS_component: import("vue").DefineComponent<{
     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
     readonly onError: (error: Error, uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
     readonly onProgress: (evt: import("./upload").UploadProgressEvent, uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
-    readonly action: string;
-    readonly withCredentials: boolean;
     readonly method: string;
-    readonly showFileList: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
+    readonly action: string;
     readonly accept: string;
+    readonly withCredentials: boolean;
+    readonly showFileList: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
     readonly fileList: import("./upload").UploadUserFile[];
     readonly autoUpload: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
     readonly listType: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "picture" | "text" | "picture-card", unknown>;

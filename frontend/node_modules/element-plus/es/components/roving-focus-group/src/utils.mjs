@@ -1,3 +1,4 @@
+import { getEventCode } from '../../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../../constants/aria.mjs';
 
 const MAP_KEY_TO_FOCUS_INTENT = {
@@ -23,7 +24,8 @@ const getDirectionAwareKey = (key, dir) => {
   }
 };
 const getFocusIntent = (event, orientation, dir) => {
-  const key = getDirectionAwareKey(event.code, dir);
+  const code = getEventCode(event);
+  const key = getDirectionAwareKey(code, dir);
   if (orientation === "vertical" && [EVENT_CODE.left, EVENT_CODE.right].includes(key))
     return void 0;
   if (orientation === "horizontal" && [EVENT_CODE.up, EVENT_CODE.down].includes(key))

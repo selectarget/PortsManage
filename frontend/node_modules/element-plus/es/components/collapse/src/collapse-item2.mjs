@@ -25,6 +25,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       arrowKls,
       headKls,
       rootKls,
+      itemTitleKls,
       itemWrapperKls,
       itemContentKls,
       scopedContentId,
@@ -37,22 +38,27 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         class: normalizeClass(unref(rootKls))
       }, [
-        createElementVNode("button", {
+        createElementVNode("div", {
           id: unref(scopedHeadId),
           class: normalizeClass(unref(headKls)),
           "aria-expanded": unref(isActive),
           "aria-controls": unref(scopedContentId),
           "aria-describedby": unref(scopedContentId),
-          tabindex: _ctx.disabled ? -1 : 0,
-          type: "button",
+          tabindex: _ctx.disabled ? void 0 : 0,
+          "aria-disabled": _ctx.disabled,
+          role: "button",
           onClick: unref(handleHeaderClick),
-          onKeydown: withKeys(withModifiers(unref(handleEnterClick), ["stop", "prevent"]), ["space", "enter"]),
+          onKeydown: withKeys(withModifiers(unref(handleEnterClick), ["stop"]), ["space", "enter"]),
           onFocus: unref(handleFocus),
           onBlur: ($event) => focusing.value = false
         }, [
-          renderSlot(_ctx.$slots, "title", {}, () => [
-            createTextVNode(toDisplayString(_ctx.title), 1)
-          ]),
+          createElementVNode("span", {
+            class: normalizeClass(unref(itemTitleKls))
+          }, [
+            renderSlot(_ctx.$slots, "title", { isActive: unref(isActive) }, () => [
+              createTextVNode(toDisplayString(_ctx.title), 1)
+            ])
+          ], 2),
           renderSlot(_ctx.$slots, "icon", { isActive: unref(isActive) }, () => [
             createVNode(unref(ElIcon), {
               class: normalizeClass(unref(arrowKls))
@@ -63,7 +69,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               _: 1
             }, 8, ["class"])
           ])
-        ], 42, ["id", "aria-expanded", "aria-controls", "aria-describedby", "tabindex", "onClick", "onKeydown", "onFocus", "onBlur"]),
+        ], 42, ["id", "aria-expanded", "aria-controls", "aria-describedby", "tabindex", "aria-disabled", "onClick", "onKeydown", "onFocus", "onBlur"]),
         createVNode(unref(ElCollapseTransition), null, {
           default: withCtx(() => [
             withDirectives(createElementVNode("div", {

@@ -27,9 +27,9 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       ns.is("truncated", props.truncated),
       ns.is("line-clamp", !types.isUndefined(props.lineClamp))
     ]);
-    const inheritTitle = vue.useAttrs().title;
     const bindTitle = () => {
-      var _a, _b, _c, _d, _e;
+      var _a, _b, _c, _d, _e, _f, _g;
+      const inheritTitle = vue.useAttrs().title;
       if (inheritTitle)
         return;
       let shouldAddTitle = false;
@@ -48,9 +48,9 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
         }
       }
       if (shouldAddTitle) {
-        textRef.value.setAttribute("title", text);
+        (_f = textRef.value) == null ? void 0 : _f.setAttribute("title", text);
       } else {
-        textRef.value.removeAttribute("title");
+        (_g = textRef.value) == null ? void 0 : _g.removeAttribute("title");
       }
     };
     vue.onMounted(bindTitle);

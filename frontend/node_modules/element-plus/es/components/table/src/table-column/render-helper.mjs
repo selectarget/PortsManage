@@ -96,13 +96,18 @@ function useRender(props, slots, owner) {
         return renderSlot(slots, "filter-icon", scope);
       };
     }
+    if (slots.expand) {
+      column.renderExpand = (scope) => {
+        return renderSlot(slots, "expand", scope);
+      };
+    }
     let originRenderCell = column.renderCell;
     if (column.type === "expand") {
       column.renderCell = (data) => h("div", {
         class: "cell"
       }, [originRenderCell(data)]);
-      owner.value.renderExpanded = (data) => {
-        return slots.default ? slots.default(data) : slots.default;
+      owner.value.renderExpanded = (row) => {
+        return slots.default ? slots.default(row) : slots.default;
       };
     } else {
       originRenderCell = originRenderCell || defaultRenderCell;

@@ -41,10 +41,10 @@ export declare const usePopper: (referenceElementRef: Ref<ReferenceElement>, pop
                 popperEscapeOffsets: import("@popperjs/core").SideObject;
             };
             offset?: {
-                top?: import("@popperjs/core").Offsets | undefined;
-                bottom?: import("@popperjs/core").Offsets | undefined;
                 left?: import("@popperjs/core").Offsets | undefined;
                 right?: import("@popperjs/core").Offsets | undefined;
+                top?: import("@popperjs/core").Offsets | undefined;
+                bottom?: import("@popperjs/core").Offsets | undefined;
                 auto?: import("@popperjs/core").Offsets | undefined;
                 "auto-start"?: import("@popperjs/core").Offsets | undefined;
                 "auto-end"?: import("@popperjs/core").Offsets | undefined;

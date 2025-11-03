@@ -35,7 +35,9 @@ var shared = require('@vue/shared');
 
 
 exports.castArray = arrays.castArray;
+exports.extractFirst = arrays.extractFirst;
 exports.unique = arrays.unique;
+exports.isAndroid = browser.isAndroid;
 exports.isFirefox = browser.isFirefox;
 exports.debugWarn = error.debugWarn;
 exports.throwError = error.throwError;
@@ -49,6 +51,7 @@ exports.generateId = rand.generateId;
 exports.getRandomInt = rand.getRandomInt;
 exports.capitalize = strings.capitalize;
 exports.escapeStringRegexp = strings.escapeStringRegexp;
+exports.kebabCase = strings.kebabCase;
 exports.isBoolean = types.isBoolean;
 exports.isElement = types.isElement;
 exports.isEmpty = types.isEmpty;
@@ -60,7 +63,7 @@ exports.isWindow = types.isWindow;
 exports.mutable = typescript.mutable;
 exports.throttleByRaf = throttleByRaf.throttleByRaf;
 exports.easeInOutCubic = easings.easeInOutCubic;
-exports.attemptFocus = aria.attemptFocus;
+exports.focusElement = aria.focusElement;
 exports.focusNode = aria.focusNode;
 exports.getSibling = aria.getSibling;
 exports.isFocusable = aria.isFocusable;
@@ -69,6 +72,8 @@ exports.isVisible = aria.isVisible;
 exports.obtainAllFocusableElements = aria.obtainAllFocusableElements;
 exports.triggerEvent = aria.triggerEvent;
 exports.composeEventHandlers = event.composeEventHandlers;
+exports.getEventCode = event.getEventCode;
+exports.getEventKey = event.getEventKey;
 exports.whenMouse = event.whenMouse;
 exports.getClientXY = position.getClientXY;
 exports.getOffsetTop = position.getOffsetTop;
@@ -112,7 +117,6 @@ exports.getComponentSize = size.getComponentSize;
 exports.isValidComponentSize = validator.isValidComponentSize;
 exports.isValidDatePickType = validator.isValidDatePickType;
 exports.PatchFlags = vnode.PatchFlags;
-exports.ensureOnlyChild = vnode.ensureOnlyChild;
 exports.flattedChildren = vnode.flattedChildren;
 exports.getFirstValidNode = vnode.getFirstValidNode;
 exports.getNormalizedProps = vnode.getNormalizedProps;
@@ -182,10 +186,6 @@ Object.defineProperty(exports, 'isString', {
 Object.defineProperty(exports, 'isSymbol', {
 	enumerable: true,
 	get: function () { return shared.isSymbol; }
-});
-Object.defineProperty(exports, 'kebabCase', {
-	enumerable: true,
-	get: function () { return shared.hyphenate; }
 });
 Object.defineProperty(exports, 'toRawType', {
 	enumerable: true,

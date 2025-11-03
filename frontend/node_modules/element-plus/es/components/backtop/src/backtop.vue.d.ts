@@ -40,8 +40,8 @@ declare const __VLS_component: import("vue").DefineComponent<{
 }>> & {
     onClick?: ((evt: MouseEvent) => any) | undefined;
 }, {
-    readonly bottom: number;
     readonly right: number;
+    readonly bottom: number;
     readonly target: string;
     readonly visibilityHeight: number;
 }>;

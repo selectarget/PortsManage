@@ -1,4 +1,4 @@
-import type { ExtractPropTypes, StyleValue } from 'vue';
+import type { ExtractPropTypes, StyleValue, __ExtractPublicPropTypes } from 'vue';
 import type { GridItemKeyGetter, ItemSize } from './types';
 export declare const virtualizedProps: {
     readonly className: import("element-plus/es/utils").EpPropFinalized<StringConstructor, unknown, unknown, "", boolean>;
@@ -12,13 +12,14 @@ export declare const virtualizedProps: {
         __epPropKey: true;
     };
     readonly innerElement: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, ObjectConstructor], unknown, unknown, "div", boolean>;
+    readonly innerProps: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>) | ((new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>))[], unknown, unknown, () => {}, boolean>;
     readonly style: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue) | ((new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue))[], unknown, unknown>>;
         readonly required: false;
         readonly validator: ((val: unknown) => boolean) | undefined;
         __epPropKey: true;
     };
-    readonly useIsScrolling: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly useIsScrolling: BooleanConstructor;
     readonly width: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>>;
         readonly required: false;
@@ -26,7 +27,7 @@ export declare const virtualizedProps: {
         __epPropKey: true;
     };
     readonly perfMode: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
-    readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly scrollbarAlwaysOn: BooleanConstructor;
 };
 export declare const virtualizedListProps: {
     readonly className: import("element-plus/es/utils").EpPropFinalized<StringConstructor, unknown, unknown, "", boolean>;
@@ -40,13 +41,14 @@ export declare const virtualizedListProps: {
         __epPropKey: true;
     };
     readonly innerElement: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, ObjectConstructor], unknown, unknown, "div", boolean>;
+    readonly innerProps: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>) | ((new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>))[], unknown, unknown, () => {}, boolean>;
     readonly style: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue) | ((new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue))[], unknown, unknown>>;
         readonly required: false;
         readonly validator: ((val: unknown) => boolean) | undefined;
         __epPropKey: true;
     };
-    readonly useIsScrolling: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly useIsScrolling: BooleanConstructor;
     readonly width: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>>;
         readonly required: false;
@@ -54,7 +56,7 @@ export declare const virtualizedListProps: {
         __epPropKey: true;
     };
     readonly perfMode: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
-    readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly scrollbarAlwaysOn: BooleanConstructor;
     readonly cache: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, never, never, 2, false>;
     readonly estimatedItemSize: {
         readonly type: import("vue").PropType<number>;
@@ -89,13 +91,14 @@ export declare const virtualizedGridProps: {
         __epPropKey: true;
     };
     readonly innerElement: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, ObjectConstructor], unknown, unknown, "div", boolean>;
+    readonly innerProps: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>) | ((new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>))[], unknown, unknown, () => {}, boolean>;
     readonly style: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue) | ((new (...args: any[]) => string | import("vue").CSSProperties | StyleValue[]) | (() => StyleValue))[], unknown, unknown>>;
         readonly required: false;
         readonly validator: ((val: unknown) => boolean) | undefined;
         __epPropKey: true;
     };
-    readonly useIsScrolling: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly useIsScrolling: BooleanConstructor;
     readonly width: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>>;
         readonly required: false;
@@ -103,7 +106,7 @@ export declare const virtualizedGridProps: {
         __epPropKey: true;
     };
     readonly perfMode: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
-    readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly scrollbarAlwaysOn: BooleanConstructor;
     readonly columnCache: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, never, never, 2, false>;
     readonly columnWidth: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => number | ItemSize) | (() => number | ItemSize) | ((new (...args: any[]) => number | ItemSize) | (() => number | ItemSize))[], never, never>>;
@@ -196,6 +199,10 @@ export declare const virtualizedScrollbarProps: {
     readonly visible: BooleanConstructor;
 };
 export type VirtualizedProps = ExtractPropTypes<typeof virtualizedProps>;
+export type VirtualizedPropsPublic = __ExtractPublicPropTypes<typeof virtualizedProps>;
 export type VirtualizedListProps = ExtractPropTypes<typeof virtualizedListProps>;
+export type VirtualizedListPropsPublic = __ExtractPublicPropTypes<typeof virtualizedListProps>;
 export type VirtualizedGridProps = ExtractPropTypes<typeof virtualizedGridProps>;
+export type VirtualizedGridPropsPublic = __ExtractPublicPropTypes<typeof virtualizedGridProps>;
 export type VirtualizedScrollbarProps = ExtractPropTypes<typeof virtualizedScrollbarProps>;
+export type VirtualizedScrollbarPropsPublic = __ExtractPublicPropTypes<typeof virtualizedScrollbarProps>;

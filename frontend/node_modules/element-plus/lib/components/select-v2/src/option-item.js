@@ -11,15 +11,17 @@ var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper
 var index = require('../../../hooks/use-namespace/index.js');
 
 const _sfc_main = vue.defineComponent({
-  props: defaults.OptionProps,
-  emits: defaults.optionEmits,
+  props: defaults.optionV2Props,
+  emits: defaults.optionV2Emits,
   setup(props, { emit }) {
     const select = vue.inject(token.selectV2InjectionKey);
     const ns = index.useNamespace("select");
     const { hoverItem, selectOptionClick } = useOption.useOption(props, { emit });
     const { getLabel } = useProps.useProps(select.props);
+    const contentId = select.contentId;
     return {
       ns,
+      contentId,
       hoverItem,
       selectOptionClick,
       getLabel
@@ -28,7 +30,10 @@ const _sfc_main = vue.defineComponent({
 });
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return vue.openBlock(), vue.createElementBlock("li", {
+    id: `${_ctx.contentId}-${_ctx.index}`,
+    role: "option",
     "aria-selected": _ctx.selected,
+    "aria-disabled": _ctx.disabled || void 0,
     style: vue.normalizeStyle(_ctx.style),
     class: vue.normalizeClass([
       _ctx.ns.be("dropdown", "item"),
@@ -47,7 +52,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     }, () => [
       vue.createElementVNode("span", null, vue.toDisplayString(_ctx.getLabel(_ctx.item)), 1)
     ])
-  ], 46, ["aria-selected", "onMousemove", "onClick"]);
+  ], 46, ["id", "aria-selected", "aria-disabled", "onMousemove", "onClick"]);
 }
 var OptionItem = /* @__PURE__ */ pluginVue_exportHelper["default"](_sfc_main, [["render", _sfc_render], ["__file", "option-item.vue"]]);
 

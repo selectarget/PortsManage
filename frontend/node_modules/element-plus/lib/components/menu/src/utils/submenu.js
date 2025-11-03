@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var aria$1 = require('../../../../utils/dom/aria.js');
+var event = require('../../../../utils/dom/event.js');
 var aria = require('../../../../constants/aria.js');
 
 class SubMenu {
@@ -29,9 +30,10 @@ class SubMenu {
   addListeners() {
     const parentNode = this.parent.domNode;
     Array.prototype.forEach.call(this.subMenuItems, (el) => {
-      el.addEventListener("keydown", (event) => {
+      el.addEventListener("keydown", (event$1) => {
+        const code = event.getEventCode(event$1);
         let prevDef = false;
-        switch (event.code) {
+        switch (code) {
           case aria.EVENT_CODE.down: {
             this.gotoSubIndex(this.subIndex + 1);
             prevDef = true;
@@ -50,13 +52,13 @@ class SubMenu {
           case aria.EVENT_CODE.numpadEnter:
           case aria.EVENT_CODE.space: {
             prevDef = true;
-            event.currentTarget.click();
+            event$1.currentTarget.click();
             break;
           }
         }
         if (prevDef) {
-          event.preventDefault();
-          event.stopPropagation();
+          event$1.preventDefault();
+          event$1.stopPropagation();
         }
         return false;
       });

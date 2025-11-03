@@ -19,13 +19,14 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
             __epPropKey: true;
         };
         readonly innerElement: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, ObjectConstructor], unknown, unknown, "div", boolean>;
+        readonly innerProps: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>) | ((new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>))[], unknown, unknown, () => {}, boolean>;
         readonly style: {
             readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | import("vue").CSSProperties | import("vue").StyleValue[]) | (() => import("vue").StyleValue) | ((new (...args: any[]) => string | import("vue").CSSProperties | import("vue").StyleValue[]) | (() => import("vue").StyleValue))[], unknown, unknown>>;
             readonly required: false;
             readonly validator: ((val: unknown) => boolean) | undefined;
             __epPropKey: true;
         };
-        readonly useIsScrolling: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+        readonly useIsScrolling: BooleanConstructor;
         readonly width: {
             readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>>;
             readonly required: false;
@@ -33,7 +34,7 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
             __epPropKey: true;
         };
         readonly perfMode: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
-        readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+        readonly scrollbarAlwaysOn: BooleanConstructor;
         readonly cache: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, never, never, 2, false>;
         readonly estimatedItemSize: {
             readonly type: import("vue").PropType<number>;
@@ -97,7 +98,7 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
             scrollOffset: number;
             updateRequested: boolean;
             isScrollbarDragging: boolean;
-            scrollbarAlwaysOn: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
+            scrollbarAlwaysOn: boolean;
         }>;
         getItemStyle: (idx: number) => import("vue").CSSProperties;
         onScroll: (e: Event) => void;
@@ -118,13 +119,14 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
             __epPropKey: true;
         };
         readonly innerElement: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, ObjectConstructor], unknown, unknown, "div", boolean>;
+        readonly innerProps: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>) | ((new (...args: any[]) => Record<string, unknown>) | (() => Record<string, unknown>))[], unknown, unknown, () => {}, boolean>;
         readonly style: {
             readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | import("vue").CSSProperties | import("vue").StyleValue[]) | (() => import("vue").StyleValue) | ((new (...args: any[]) => string | import("vue").CSSProperties | import("vue").StyleValue[]) | (() => import("vue").StyleValue))[], unknown, unknown>>;
             readonly required: false;
             readonly validator: ((val: unknown) => boolean) | undefined;
             __epPropKey: true;
         };
-        readonly useIsScrolling: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+        readonly useIsScrolling: BooleanConstructor;
         readonly width: {
             readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>>;
             readonly required: false;
@@ -132,7 +134,7 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
             __epPropKey: true;
         };
         readonly perfMode: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
-        readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+        readonly scrollbarAlwaysOn: BooleanConstructor;
         readonly cache: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, never, never, 2, false>;
         readonly estimatedItemSize: {
             readonly type: import("vue").PropType<number>;
@@ -164,9 +166,10 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
         readonly className: string;
         readonly containerElement: import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | Element) | (() => string | Element) | ((new (...args: any[]) => string | Element) | (() => string | Element))[], unknown, unknown>;
         readonly innerElement: import("element-plus/es/utils").EpPropMergeType<readonly [StringConstructor, ObjectConstructor], unknown, unknown>;
-        readonly useIsScrolling: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
+        readonly innerProps: Record<string, unknown>;
         readonly perfMode: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
-        readonly scrollbarAlwaysOn: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown>;
+        readonly useIsScrolling: boolean;
+        readonly scrollbarAlwaysOn: boolean;
         readonly cache: number;
         readonly initScrollOffset: number;
     }> | undefined>;
@@ -174,7 +177,6 @@ export declare function useTree(props: TreeProps, emit: SetupContext<typeof tree
     getChildren: (node: TreeNodeData) => TreeNodeData[];
     toggleExpand: (node: TreeNode) => void;
     toggleCheckbox: (node: TreeNode, isChecked: CheckboxValueType, nodeClick?: boolean, immediateUpdate?: boolean) => void;
-    isExpanded: (node: TreeNode) => boolean;
     isChecked: (node: TreeNode) => boolean;
     isIndeterminate: (node: TreeNode) => boolean;
     isDisabled: (node: TreeNode) => boolean;

@@ -10,11 +10,17 @@ declare const _default: {
             defaultLabel: string;
             description: string;
             alphaLabel: string;
+            alphaDescription: string;
+            hueLabel: string;
+            hueDescription: string;
+            svLabel: string;
+            svDescription: string;
+            predefineDescription: string;
         };
         datepicker: {
             now: string;
             today: string;
-            Batal: string;
+            cancel: string;
             clear: string;
             confirm: string;
             dateTablePrompt: string;
@@ -44,7 +50,6 @@ declare const _default: {
             month10: string;
             month11: string;
             month12: string;
-            week: string;
             weeks: {
                 sun: string;
                 mon: string;
@@ -122,9 +127,10 @@ declare const _default: {
         messagebox: {
             title: string;
             confirm: string;
-            Batal: string;
+            cancel: string;
             error: string;
             close: string;
+            Batal: string;
         };
         upload: {
             deleteTip: string;
@@ -148,6 +154,7 @@ declare const _default: {
             next: string;
             previous: string;
             finish: string;
+            close: string;
         };
         tree: {
             emptyText: string;
@@ -168,6 +175,7 @@ declare const _default: {
         };
         popconfirm: {
             confirmButtonText: string;
+            cancelButtonText: string;
             BatalButtonText: string;
         };
         carousel: {

@@ -1,7 +1,8 @@
 import { inject, ref, computed, nextTick, watch } from 'vue';
-import { debounce } from 'lodash-unified';
+import { clamp, debounce } from 'lodash-unified';
 import { useEventListener } from '@vueuse/core';
 import { sliderContextKey } from '../constants.mjs';
+import { getEventCode } from '../../../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../../../constants/aria.mjs';
 import { UPDATE_MODEL_EVENT } from '../../../../constants/event.mjs';
 
@@ -105,8 +106,9 @@ const useSliderButton = (props, initData, emit) => {
     emitChange();
   };
   const onKeyDown = (event) => {
+    const code = getEventCode(event);
     let isPreventDefault = true;
-    switch (event.code) {
+    switch (code) {
       case EVENT_CODE.left:
       case EVENT_CODE.down:
         onLeftKeyDown();
@@ -200,14 +202,20 @@ const useSliderButton = (props, initData, emit) => {
   const setPosition = async (newPosition) => {
     if (newPosition === null || Number.isNaN(+newPosition))
       return;
-    if (newPosition < 0) {
-      newPosition = 0;
-    } else if (newPosition > 100) {
-      newPosition = 100;
+    newPosition = clamp(newPosition, 0, 100);
+    const fullSteps = Math.floor((max.value - min.value) / step.value);
+    const fullRangePercentage = fullSteps * step.value / (max.value - min.value) * 100;
+    const threshold = fullRangePercentage + (100 - fullRangePercentage) / 2;
+    let value;
+    if (newPosition < fullRangePercentage) {
+      const valueBetween = fullRangePercentage / fullSteps;
+      const steps = Math.round(newPosition / valueBetween);
+      value = min.value + steps * step.value;
+    } else if (newPosition < threshold) {
+      value = min.value + fullSteps * step.value;
+    } else {
+      value = max.value;
     }
-    const lengthPerStep = 100 / ((max.value - min.value) / step.value);
-    const steps = Math.round(newPosition / lengthPerStep);
-    let value = steps * lengthPerStep * (max.value - min.value) * 0.01 + min.value;
     value = Number.parseFloat(value.toFixed(precision.value));
     if (value !== props.modelValue) {
       emit(UPDATE_MODEL_EVENT, value);

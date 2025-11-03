@@ -4,13 +4,15 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var core = require('@vueuse/core');
+var event = require('../../utils/dom/event.js');
 var aria = require('../../constants/aria.js');
 
 const modalStack = [];
 const closeModal = (e) => {
   if (modalStack.length === 0)
     return;
-  if (e.code === aria.EVENT_CODE.esc) {
+  const code = event.getEventCode(e);
+  if (code === aria.EVENT_CODE.esc) {
     e.stopPropagation();
     const topModal = modalStack[modalStack.length - 1];
     topModal.handleClose();

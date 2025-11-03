@@ -1,4 +1,4 @@
-import type { ExtractPropTypes } from 'vue';
+import type { ExtractPropTypes, __ExtractPublicPropTypes } from 'vue';
 import type Watermark from './watermark.vue';
 export interface WatermarkFontType {
     color?: string;
@@ -6,6 +6,7 @@ export interface WatermarkFontType {
     fontWeight?: 'normal' | 'light' | 'weight' | number;
     fontStyle?: 'none' | 'normal' | 'italic' | 'oblique';
     fontFamily?: string;
+    fontGap?: number;
     textAlign?: 'start' | 'end' | 'left' | 'right' | 'center';
     textBaseline?: 'top' | 'hanging' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
 }
@@ -31,4 +32,5 @@ export declare const watermarkProps: {
     };
 };
 export type WatermarkProps = ExtractPropTypes<typeof watermarkProps>;
-export type WatermarkInstance = InstanceType<typeof Watermark>;
+export type WatermarkPropsPublic = __ExtractPublicPropTypes<typeof watermarkProps>;
+export type WatermarkInstance = InstanceType<typeof Watermark> & unknown;

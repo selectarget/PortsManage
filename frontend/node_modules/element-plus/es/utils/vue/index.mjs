@@ -4,6 +4,6 @@ export { withInstall, withInstallDirective, withInstallFunction, withNoopInstall
 export { composeRefs } from './refs.mjs';
 export { getComponentSize } from './size.mjs';
 export { isValidComponentSize, isValidDatePickType } from './validator.mjs';
-export { PatchFlags, ensureOnlyChild, flattedChildren, getFirstValidNode, getNormalizedProps, isComment, isFragment, isTemplate, isText, isValidElementNode, renderBlock, renderIf } from './vnode.mjs';
+export { PatchFlags, flattedChildren, getFirstValidNode, getNormalizedProps, isComment, isFragment, isTemplate, isText, isValidElementNode, renderBlock, renderIf } from './vnode.mjs';
 export { buildProp, buildProps, definePropType, epPropKey, isEpProp } from './props/runtime.mjs';
 //# sourceMappingURL=index.mjs.map

@@ -2,6 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var event = require('../../../utils/dom/event.js');
 var aria = require('../../../constants/aria.js');
 
 const MAP_KEY_TO_FOCUS_INTENT = {
@@ -26,8 +27,9 @@ const getDirectionAwareKey = (key, dir) => {
       return key;
   }
 };
-const getFocusIntent = (event, orientation, dir) => {
-  const key = getDirectionAwareKey(event.code, dir);
+const getFocusIntent = (event$1, orientation, dir) => {
+  const code = event.getEventCode(event$1);
+  const key = getDirectionAwareKey(code, dir);
   if (orientation === "vertical" && [aria.EVENT_CODE.left, aria.EVENT_CODE.right].includes(key))
     return void 0;
   if (orientation === "horizontal" && [aria.EVENT_CODE.up, aria.EVENT_CODE.down].includes(key))

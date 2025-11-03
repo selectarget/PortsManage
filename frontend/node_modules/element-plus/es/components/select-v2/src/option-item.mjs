@@ -1,21 +1,23 @@
 import { defineComponent, inject, openBlock, createElementBlock, normalizeStyle, normalizeClass, withModifiers, renderSlot, createElementVNode, toDisplayString } from 'vue';
 import { useOption } from './useOption.mjs';
 import { useProps } from './useProps.mjs';
-import { OptionProps, optionEmits } from './defaults.mjs';
+import { optionV2Props, optionV2Emits } from './defaults.mjs';
 import { selectV2InjectionKey } from './token.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';
 import { useNamespace } from '../../../hooks/use-namespace/index.mjs';
 
 const _sfc_main = defineComponent({
-  props: OptionProps,
-  emits: optionEmits,
+  props: optionV2Props,
+  emits: optionV2Emits,
   setup(props, { emit }) {
     const select = inject(selectV2InjectionKey);
     const ns = useNamespace("select");
     const { hoverItem, selectOptionClick } = useOption(props, { emit });
     const { getLabel } = useProps(select.props);
+    const contentId = select.contentId;
     return {
       ns,
+      contentId,
       hoverItem,
       selectOptionClick,
       getLabel
@@ -24,7 +26,10 @@ const _sfc_main = defineComponent({
 });
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("li", {
+    id: `${_ctx.contentId}-${_ctx.index}`,
+    role: "option",
     "aria-selected": _ctx.selected,
+    "aria-disabled": _ctx.disabled || void 0,
     style: normalizeStyle(_ctx.style),
     class: normalizeClass([
       _ctx.ns.be("dropdown", "item"),
@@ -43,7 +48,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     }, () => [
       createElementVNode("span", null, toDisplayString(_ctx.getLabel(_ctx.item)), 1)
     ])
-  ], 46, ["aria-selected", "onMousemove", "onClick"]);
+  ], 46, ["id", "aria-selected", "aria-disabled", "onMousemove", "onClick"]);
 }
 var OptionItem = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "option-item.vue"]]);
 

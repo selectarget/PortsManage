@@ -10,7 +10,16 @@ var hr = {
     },
     colorpicker: {
       confirm: "OK",
-      clear: "O\u010Disti"
+      clear: "O\u010Disti",
+      defaultLabel: "color picker",
+      description: "current color is {color}. press enter to select a new color.",
+      alphaLabel: "pick alpha value",
+      alphaDescription: "alpha {alpha}, current color is {color}",
+      hueLabel: "pick hue value",
+      hueDescription: "hue {hue}, current color is {color}",
+      svLabel: "pick saturation and brightness value",
+      svDescription: "saturation {saturation}, brightness {brightness}, current color is {color}",
+      predefineDescription: "select {value} as the color"
     },
     datepicker: {
       now: "Sada",
@@ -18,6 +27,10 @@ var hr = {
       cancel: "Otka\u017Ei",
       clear: "O\u010Disti",
       confirm: "OK",
+      dateTablePrompt: "Use the arrow keys and enter to select the day of the month",
+      monthTablePrompt: "Use the arrow keys and enter to select the month",
+      yearTablePrompt: "Use the arrow keys and enter to select the year",
+      selectedDate: "Selected date",
       selectDate: "Odaberi datum",
       selectTime: "Odaberi vrijeme",
       startDate: "Datum po\u010Detka",
@@ -41,7 +54,6 @@ var hr = {
       month10: "Listopad",
       month11: "Studeni",
       month12: "Prosinac",
-      week: "tjedan",
       weeks: {
         sun: "Ned",
         mon: "Pon",
@@ -50,6 +62,15 @@ var hr = {
         thu: "\u010Cet",
         fri: "Pet",
         sat: "Sub"
+      },
+      weeksFull: {
+        sun: "Sunday",
+        mon: "Monday",
+        tue: "Tuesday",
+        wed: "Wednesday",
+        thu: "Thursday",
+        fri: "Friday",
+        sat: "Saturday"
       },
       months: {
         jan: "Jan",
@@ -66,6 +87,10 @@ var hr = {
         dec: "Dec"
       }
     },
+    inputNumber: {
+      decrease: "decrease number",
+      increase: "increase number"
+    },
     select: {
       loading: "U\u010Ditavanje",
       noMatch: "Nema prona\u0111enih podataka",
@@ -74,6 +99,9 @@ var hr = {
     },
     mention: {
       loading: "U\u010Ditavanje"
+    },
+    dropdown: {
+      toggleDropdown: "Toggle Dropdown"
     },
     cascader: {
       noMatch: "Nema prona\u0111enih podataka",
@@ -91,13 +119,21 @@ var hr = {
       next: "Go to next page",
       currentPage: "page {pager}",
       prevPages: "Previous {pager} pages",
-      nextPages: "Next {pager} pages"
+      nextPages: "Next {pager} pages",
+      deprecationWarning: "Deprecated usages detected, please refer to the el-pagination documentation for more details"
+    },
+    dialog: {
+      close: "Close this dialog"
+    },
+    drawer: {
+      close: "Close this dialog"
     },
     messagebox: {
       title: "Poruka",
       confirm: "OK",
       cancel: "Otka\u017Ei",
-      error: "Pogre\u0161an unos"
+      error: "Pogre\u0161an unos",
+      close: "Close this dialog"
     },
     upload: {
       deleteTip: "pritisnite izbri\u0161i za brisanje",
@@ -105,12 +141,23 @@ var hr = {
       preview: "Pregled",
       continue: "Nastavak"
     },
+    slider: {
+      defaultLabel: "slider between {min} and {max}",
+      defaultRangeStartLabel: "pick start value",
+      defaultRangeEndLabel: "pick end value"
+    },
     table: {
       emptyText: "Nema podataka",
       confirmFilter: "Potvrdi",
       resetFilter: "Resetiraj",
       clearFilter: "Sve",
       sumText: "Suma"
+    },
+    tour: {
+      next: "Next",
+      previous: "Previous",
+      finish: "Finish",
+      close: "Close this dialog"
     },
     tree: {
       emptyText: "Nema podataka"

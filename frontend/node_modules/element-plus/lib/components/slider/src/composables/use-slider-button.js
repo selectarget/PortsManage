@@ -6,8 +6,9 @@ var vue = require('vue');
 var lodashUnified = require('lodash-unified');
 var core = require('@vueuse/core');
 var constants = require('../constants.js');
+var event = require('../../../../utils/dom/event.js');
 var aria = require('../../../../constants/aria.js');
-var event = require('../../../../constants/event.js');
+var event$1 = require('../../../../constants/event.js');
 
 const useTooltip = (props, formatTooltip, showTooltip) => {
   const tooltip = vue.ref();
@@ -108,9 +109,10 @@ const useSliderButton = (props, initData, emit) => {
     setPosition(100);
     emitChange();
   };
-  const onKeyDown = (event) => {
+  const onKeyDown = (event$1) => {
+    const code = event.getEventCode(event$1);
     let isPreventDefault = true;
-    switch (event.code) {
+    switch (code) {
       case aria.EVENT_CODE.left:
       case aria.EVENT_CODE.down:
         onLeftKeyDown();
@@ -135,7 +137,7 @@ const useSliderButton = (props, initData, emit) => {
         isPreventDefault = false;
         break;
     }
-    isPreventDefault && event.preventDefault();
+    isPreventDefault && event$1.preventDefault();
   };
   const getClientXY = (event) => {
     let clientX;
@@ -204,17 +206,23 @@ const useSliderButton = (props, initData, emit) => {
   const setPosition = async (newPosition) => {
     if (newPosition === null || Number.isNaN(+newPosition))
       return;
-    if (newPosition < 0) {
-      newPosition = 0;
-    } else if (newPosition > 100) {
-      newPosition = 100;
+    newPosition = lodashUnified.clamp(newPosition, 0, 100);
+    const fullSteps = Math.floor((max.value - min.value) / step.value);
+    const fullRangePercentage = fullSteps * step.value / (max.value - min.value) * 100;
+    const threshold = fullRangePercentage + (100 - fullRangePercentage) / 2;
+    let value;
+    if (newPosition < fullRangePercentage) {
+      const valueBetween = fullRangePercentage / fullSteps;
+      const steps = Math.round(newPosition / valueBetween);
+      value = min.value + steps * step.value;
+    } else if (newPosition < threshold) {
+      value = min.value + fullSteps * step.value;
+    } else {
+      value = max.value;
     }
-    const lengthPerStep = 100 / ((max.value - min.value) / step.value);
-    const steps = Math.round(newPosition / lengthPerStep);
-    let value = steps * lengthPerStep * (max.value - min.value) * 0.01 + min.value;
     value = Number.parseFloat(value.toFixed(precision.value));
     if (value !== props.modelValue) {
-      emit(event.UPDATE_MODEL_EVENT, value);
+      emit(event$1.UPDATE_MODEL_EVENT, value);
     }
     if (!initData.dragging && props.modelValue !== initData.oldValue) {
       initData.oldValue = props.modelValue;

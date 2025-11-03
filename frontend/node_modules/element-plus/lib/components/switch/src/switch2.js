@@ -34,8 +34,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     });
     const switchDisabled = useFormCommonProps.useFormDisabled(vue.computed(() => props.loading));
     const isControlled = vue.ref(props.modelValue !== false);
-    const input = vue.ref();
-    const core = vue.ref();
+    const input = vue.shallowRef();
     const switchKls = vue.computed(() => [
       ns.b(),
       ns.m(switchSize.value),
@@ -161,8 +160,6 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
           }, vue.toDisplayString(_ctx.inactiveText), 9, ["aria-hidden"])) : vue.createCommentVNode("v-if", true)
         ], 2)) : vue.createCommentVNode("v-if", true),
         vue.createElementVNode("span", {
-          ref_key: "core",
-          ref: core,
           class: vue.normalizeClass(vue.unref(ns).e("core")),
           style: vue.normalizeStyle(vue.unref(coreStyle))
         }, [

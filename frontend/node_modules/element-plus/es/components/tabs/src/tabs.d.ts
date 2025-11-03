@@ -1,7 +1,7 @@
-import type { TabsPaneContext } from './constants';
-import type { ExtractPropTypes } from 'vue';
+import type { ExtractPropTypes, VNode, __ExtractPublicPropTypes } from 'vue';
 import type { Awaitable } from 'element-plus/es/utils';
-export type TabPaneName = string | number;
+import type { TabNavInstance } from './tab-nav';
+import type { TabPaneName, TabsPaneContext } from './constants';
 export declare const tabsProps: {
     readonly type: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "" | "card" | "border-card", unknown, "", boolean>;
     readonly closable: BooleanConstructor;
@@ -13,7 +13,7 @@ export declare const tabsProps: {
         __epPropKey: true;
     };
     readonly editable: BooleanConstructor;
-    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "top" | "bottom" | "left" | "right", unknown, "top", boolean>;
+    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "left" | "right" | "top" | "bottom", unknown, "top", boolean>;
     readonly beforeLeave: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | (() => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | {
         (): (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>;
         new (): any;
@@ -24,8 +24,10 @@ export declare const tabsProps: {
         readonly prototype: any;
     })[], unknown, unknown, () => true, boolean>;
     readonly stretch: BooleanConstructor;
+    readonly tabindex: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, NumberConstructor], unknown, unknown, 0, boolean>;
 };
 export type TabsProps = ExtractPropTypes<typeof tabsProps>;
+export type TabsPropsPublic = __ExtractPublicPropTypes<typeof tabsProps>;
 export declare const tabsEmits: {
     "update:modelValue": (name: TabPaneName) => name is string | number;
     tabClick: (pane: TabsPaneContext, ev: Event) => boolean;
@@ -47,7 +49,7 @@ declare const Tabs: import("vue").DefineComponent<{
         __epPropKey: true;
     };
     readonly editable: BooleanConstructor;
-    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "top" | "bottom" | "left" | "right", unknown, "top", boolean>;
+    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "left" | "right" | "top" | "bottom", unknown, "top", boolean>;
     readonly beforeLeave: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | (() => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | {
         (): (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>;
         new (): any;
@@ -58,6 +60,7 @@ declare const Tabs: import("vue").DefineComponent<{
         readonly prototype: any;
     })[], unknown, unknown, () => true, boolean>;
     readonly stretch: BooleanConstructor;
+    readonly tabindex: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, NumberConstructor], unknown, unknown, 0, boolean>;
 }, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     "update:modelValue": (name: TabPaneName) => name is string | number;
     tabClick: (pane: TabsPaneContext, ev: Event) => boolean;
@@ -76,7 +79,7 @@ declare const Tabs: import("vue").DefineComponent<{
         __epPropKey: true;
     };
     readonly editable: BooleanConstructor;
-    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "top" | "bottom" | "left" | "right", unknown, "top", boolean>;
+    readonly tabPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "left" | "right" | "top" | "bottom", unknown, "top", boolean>;
     readonly beforeLeave: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | (() => (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>) | {
         (): (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>;
         new (): any;
@@ -87,37 +90,42 @@ declare const Tabs: import("vue").DefineComponent<{
         readonly prototype: any;
     })[], unknown, unknown, () => true, boolean>;
     readonly stretch: BooleanConstructor;
+    readonly tabindex: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, NumberConstructor], unknown, unknown, 0, boolean>;
 }>> & {
     "onUpdate:modelValue"?: ((name: TabPaneName) => any) | undefined;
     onTabClick?: ((pane: {
         uid: number;
+        getVnode: () => VNode;
         slots: import("vue").Slots;
         props: {
             readonly label: string;
             readonly disabled: boolean;
-            readonly closable: boolean;
             readonly lazy: boolean;
             readonly name?: import("element-plus/es/utils").EpPropMergeType<readonly [StringConstructor, NumberConstructor], unknown, unknown> | undefined;
+            readonly closable?: import("element-plus/es/utils").EpPropMergeType<BooleanConstructor, unknown, unknown> | undefined;
         };
-        paneName: string | number | undefined;
+        paneName: TabPaneName | undefined;
         active: boolean;
         index: string | undefined;
         isClosable: boolean;
+        isFocusInsidePane: () => boolean | undefined;
     }, ev: Event) => any) | undefined;
     onTabRemove?: ((name: TabPaneName) => any) | undefined;
     onTabChange?: ((name: TabPaneName) => any) | undefined;
     onEdit?: ((paneName: TabPaneName | undefined, action: "add" | "remove") => any) | undefined;
     onTabAdd?: (() => any) | undefined;
 }, {
+    readonly tabindex: import("element-plus/es/utils").EpPropMergeType<readonly [StringConstructor, NumberConstructor], unknown, unknown>;
     readonly stretch: boolean;
     readonly type: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "" | "card" | "border-card", unknown>;
     readonly closable: boolean;
     readonly beforeLeave: (newName: TabPaneName, oldName: TabPaneName) => Awaitable<void | boolean>;
     readonly editable: boolean;
-    readonly tabPosition: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "top" | "bottom" | "left" | "right", unknown>;
+    readonly tabPosition: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "left" | "right" | "top" | "bottom", unknown>;
     readonly addable: boolean;
 }>;
 export type TabsInstance = InstanceType<typeof Tabs> & {
     currentName: TabPaneName;
+    tabNavRef: TabNavInstance | undefined;
 };
 export default Tabs;

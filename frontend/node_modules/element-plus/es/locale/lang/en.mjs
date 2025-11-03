@@ -9,7 +9,13 @@ var English = {
       clear: "Clear",
       defaultLabel: "color picker",
       description: "current color is {color}. press enter to select a new color.",
-      alphaLabel: "pick alpha value"
+      alphaLabel: "pick alpha value",
+      alphaDescription: "alpha {alpha}, current color is {color}",
+      hueLabel: "pick hue value",
+      hueDescription: "hue {hue}, current color is {color}",
+      svLabel: "pick saturation and brightness value",
+      svDescription: "saturation {saturation}, brightness {brightness}, current color is {color}",
+      predefineDescription: "select {value} as the color"
     },
     datepicker: {
       now: "Now",
@@ -44,7 +50,6 @@ var English = {
       month10: "October",
       month11: "November",
       month12: "December",
-      week: "week",
       weeks: {
         sun: "Sun",
         mon: "Mon",
@@ -147,7 +152,8 @@ var English = {
     tour: {
       next: "Next",
       previous: "Previous",
-      finish: "Finish"
+      finish: "Finish",
+      close: "Close this dialog"
     },
     tree: {
       emptyText: "No Data"

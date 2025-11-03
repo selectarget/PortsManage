@@ -8,6 +8,7 @@ var utils = require('./utils.js');
 var tokens = require('./tokens.js');
 var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper.js');
 var index = require('../../../hooks/use-escape-keydown/index.js');
+var event = require('../../../utils/dom/event.js');
 var aria = require('../../../constants/aria.js');
 var shared = require('@vue/shared');
 
@@ -55,8 +56,9 @@ const _sfc_main = vue.defineComponent({
         return;
       if (focusLayer.paused)
         return;
-      const { code, altKey, ctrlKey, metaKey, currentTarget, shiftKey } = e;
+      const { altKey, ctrlKey, metaKey, currentTarget, shiftKey } = e;
       const { loop } = props;
+      const code = event.getEventCode(e);
       const isTabbing = code === aria.EVENT_CODE.tab && !altKey && !ctrlKey && !metaKey;
       const currentFocusingEl = document.activeElement;
       if (isTabbing && currentFocusingEl) {
@@ -223,6 +225,8 @@ const _sfc_main = vue.defineComponent({
         }
         trapContainer.removeEventListener(tokens.FOCUS_AFTER_RELEASED, releaseOnFocus);
         utils.focusableStack.remove(focusLayer);
+        lastFocusBeforeTrapped = null;
+        lastFocusAfterTrapped = null;
       }
     }
     vue.onMounted(() => {

@@ -2,20 +2,27 @@ var fr = {
   name: "fr",
   el: {
     breadcrumb: {
-      label: `Fil d'Ariane`
+      label: "Fil d'Ariane"
     },
     colorpicker: {
-      confirm: "OK",
+      confirm: "Confirmer",
       clear: "Effacer",
       defaultLabel: "color picker",
-      description: "La couleur actuelle est {color}. Appuyer sur Entr\xE9e pour s\xE9lectionner une nouvelle couleur."
+      description: "La couleur actuelle est {color}. Appuyer sur Entr\xE9e pour s\xE9lectionner une nouvelle couleur.",
+      alphaLabel: "Choisir la valeur alpha",
+      alphaDescription: "alpha {alpha}, current color is {color}",
+      hueLabel: "pick hue value",
+      hueDescription: "hue {hue}, current color is {color}",
+      svLabel: "pick saturation and brightness value",
+      svDescription: "saturation {saturation}, brightness {brightness}, current color is {color}",
+      predefineDescription: "select {value} as the color"
     },
     datepicker: {
       now: "Maintenant",
       today: "Auj.",
       cancel: "Annuler",
       clear: "Effacer",
-      confirm: "OK",
+      confirm: "Confirmer",
       dateTablePrompt: "Utiliser les touches fl\xE9ch\xE9es et appuyer sur Entr\xE9e pour s\xE9lectionner le jour du mois",
       monthTablePrompt: "Utiliser les touches fl\xE9ch\xE9es et appuyer sur Entr\xE9e pour s\xE9lectionner le mois",
       yearTablePrompt: "Utiliser les touches fl\xE9ch\xE9es et appuyer sur Entr\xE9e pour s\xE9lectionner l'ann\xE9e",
@@ -43,7 +50,6 @@ var fr = {
       month10: "Octobre",
       month11: "Novembre",
       month12: "D\xE9cembre",
-      week: "Semaine",
       weeks: {
         sun: "Dim",
         mon: "Lun",
@@ -89,6 +95,9 @@ var fr = {
     },
     mention: {
       loading: "Chargement"
+    },
+    dropdown: {
+      toggleDropdown: "Basculer la liste d\xE9roulante"
     },
     cascader: {
       noMatch: "Aucune correspondance",
@@ -143,7 +152,8 @@ var fr = {
     tour: {
       next: "suivant",
       previous: "pr\xE9c\xE9dent",
-      finish: "fin"
+      finish: "fin",
+      close: "Fermer la bo\xEEte de dialogue"
     },
     tree: {
       emptyText: "Aucune donn\xE9e"

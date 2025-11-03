@@ -2,16 +2,10 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var shared = require('@vue/shared');
-
 const composeRefs = (...refs) => {
   return (el) => {
     refs.forEach((ref) => {
-      if (shared.isFunction(ref)) {
-        ref(el);
-      } else {
-        ref.value = el;
-      }
+      ref.value = el;
     });
   };
 };
