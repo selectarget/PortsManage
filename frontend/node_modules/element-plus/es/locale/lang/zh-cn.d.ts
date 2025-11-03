@@ -10,6 +10,12 @@ declare const _default: {
             defaultLabel: string;
             description: string;
             alphaLabel: string;
+            alphaDescription: string;
+            hueLabel: string;
+            hueDescription: string;
+            svLabel: string;
+            svDescription: string;
+            predefineDescription: string;
         };
         datepicker: {
             now: string;
@@ -87,11 +93,11 @@ declare const _default: {
             noData: string;
             placeholder: string;
         };
-        dropdown: {
-            toggleDropdown: string;
-        };
         mention: {
             loading: string;
+        };
+        dropdown: {
+            toggleDropdown: string;
         };
         cascader: {
             noMatch: string;
@@ -147,6 +153,7 @@ declare const _default: {
             next: string;
             previous: string;
             finish: string;
+            close: string;
         };
         tree: {
             emptyText: string;

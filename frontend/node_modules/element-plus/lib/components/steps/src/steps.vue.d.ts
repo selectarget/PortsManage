@@ -42,8 +42,8 @@ declare const __VLS_component: import("vue").DefineComponent<{
 }>> & {
     onChange?: ((newVal: number, oldVal: number) => any) | undefined;
 }, {
-    readonly direction: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "horizontal" | "vertical", unknown>;
     readonly space: import("element-plus/es/utils").EpPropMergeType<readonly [NumberConstructor, StringConstructor], unknown, unknown>;
+    readonly direction: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "horizontal" | "vertical", unknown>;
     readonly active: number;
     readonly finishStatus: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "wait" | "error" | "finish" | "success" | "process", unknown>;
     readonly processStatus: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "wait" | "error" | "finish" | "success" | "process", unknown>;

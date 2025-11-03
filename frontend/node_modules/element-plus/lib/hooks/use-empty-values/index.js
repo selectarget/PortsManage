@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
+var lodashUnified = require('lodash-unified');
 var runtime = require('../../utils/vue/props/runtime.js');
 var shared = require('@vue/shared');
 var error = require('../../utils/error.js');
@@ -14,9 +15,20 @@ const DEFAULT_VALUE_ON_CLEAR = void 0;
 const useEmptyValuesProps = runtime.buildProps({
   emptyValues: Array,
   valueOnClear: {
-    type: [String, Number, Boolean, Function],
+    type: runtime.definePropType([
+      String,
+      Number,
+      Boolean,
+      Function
+    ]),
     default: void 0,
-    validator: (val) => shared.isFunction(val) ? !val() : !val
+    validator: (val) => {
+      val = shared.isFunction(val) ? val() : val;
+      if (shared.isArray(val)) {
+        return val.every((item) => !item);
+      }
+      return !val;
+    }
   }
 });
 const useEmptyValues = (props, defaultValue) => {
@@ -35,9 +47,17 @@ const useEmptyValues = (props, defaultValue) => {
     return defaultValue !== void 0 ? defaultValue : DEFAULT_VALUE_ON_CLEAR;
   });
   const isEmptyValue = (value) => {
-    return emptyValues.value.includes(value);
+    let result = true;
+    if (shared.isArray(value)) {
+      result = emptyValues.value.some((emptyValue) => {
+        return lodashUnified.isEqual(value, emptyValue);
+      });
+    } else {
+      result = emptyValues.value.includes(value);
+    }
+    return result;
   };
-  if (!emptyValues.value.includes(valueOnClear.value)) {
+  if (!isEmptyValue(valueOnClear.value)) {
     error.debugWarn(SCOPE, "value-on-clear should be a value of empty-values");
   }
   return {

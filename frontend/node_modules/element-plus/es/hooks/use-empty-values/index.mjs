@@ -1,6 +1,7 @@
 import { getCurrentInstance, inject, ref, computed } from 'vue';
-import { buildProps } from '../../utils/vue/props/runtime.mjs';
-import { isFunction } from '@vue/shared';
+import { isEqual } from 'lodash-unified';
+import { buildProps, definePropType } from '../../utils/vue/props/runtime.mjs';
+import { isFunction, isArray } from '@vue/shared';
 import { debugWarn } from '../../utils/error.mjs';
 
 const emptyValuesContextKey = Symbol("emptyValuesContextKey");
@@ -10,9 +11,20 @@ const DEFAULT_VALUE_ON_CLEAR = void 0;
 const useEmptyValuesProps = buildProps({
   emptyValues: Array,
   valueOnClear: {
-    type: [String, Number, Boolean, Function],
+    type: definePropType([
+      String,
+      Number,
+      Boolean,
+      Function
+    ]),
     default: void 0,
-    validator: (val) => isFunction(val) ? !val() : !val
+    validator: (val) => {
+      val = isFunction(val) ? val() : val;
+      if (isArray(val)) {
+        return val.every((item) => !item);
+      }
+      return !val;
+    }
   }
 });
 const useEmptyValues = (props, defaultValue) => {
@@ -31,9 +43,17 @@ const useEmptyValues = (props, defaultValue) => {
     return defaultValue !== void 0 ? defaultValue : DEFAULT_VALUE_ON_CLEAR;
   });
   const isEmptyValue = (value) => {
-    return emptyValues.value.includes(value);
+    let result = true;
+    if (isArray(value)) {
+      result = emptyValues.value.some((emptyValue) => {
+        return isEqual(value, emptyValue);
+      });
+    } else {
+      result = emptyValues.value.includes(value);
+    }
+    return result;
   };
-  if (!emptyValues.value.includes(valueOnClear.value)) {
+  if (!isEmptyValue(valueOnClear.value)) {
     debugWarn(SCOPE, "value-on-clear should be a value of empty-values");
   }
   return {

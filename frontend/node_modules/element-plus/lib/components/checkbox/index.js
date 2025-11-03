@@ -17,6 +17,7 @@ const ElCheckbox = install.withInstall(checkbox$1["default"], {
 const ElCheckboxButton = install.withNoopInstall(checkboxButton["default"]);
 const ElCheckboxGroup = install.withNoopInstall(checkboxGroup$1["default"]);
 
+exports.checkboxDefaultProps = checkboxGroup.checkboxDefaultProps;
 exports.checkboxGroupEmits = checkboxGroup.checkboxGroupEmits;
 exports.checkboxGroupProps = checkboxGroup.checkboxGroupProps;
 exports.checkboxEmits = checkbox.checkboxEmits;

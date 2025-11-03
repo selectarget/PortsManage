@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, openBlock, createBlock, unref, mergeProps, withCtx, createElementVNode, normalizeClass, normalizeStyle, resolveDynamicComponent, createCommentVNode, createTextVNode, toDisplayString, renderSlot, createVNode } from 'vue';
+import { defineComponent, ref, computed, unref, openBlock, createBlock, mergeProps, withCtx, createElementVNode, normalizeClass, normalizeStyle, resolveDynamicComponent, createCommentVNode, createTextVNode, toDisplayString, renderSlot, createVNode } from 'vue';
 import { ElButton } from '../../button/index.mjs';
 import { ElIcon } from '../../icon/index.mjs';
 import { ElTooltip } from '../../tooltip/index.mjs';
@@ -15,11 +15,20 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   ...__default__,
   props: popconfirmProps,
   emits: popconfirmEmits,
-  setup(__props, { emit }) {
+  setup(__props, { expose, emit }) {
     const props = __props;
     const { t } = useLocale();
     const ns = useNamespace("popconfirm");
     const tooltipRef = ref();
+    const rootRef = ref();
+    const popperRef = computed(() => {
+      var _a;
+      return (_a = unref(tooltipRef)) == null ? void 0 : _a.popperRef;
+    });
+    const showPopper = () => {
+      var _a, _b;
+      (_b = (_a = rootRef.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
+    };
     const hidePopper = () => {
       var _a, _b;
       (_b = (_a = tooltipRef.value) == null ? void 0 : _a.onClose) == null ? void 0 : _b.call(_a);
@@ -39,22 +48,31 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
     const finalConfirmButtonText = computed(() => props.confirmButtonText || t("el.popconfirm.confirmButtonText"));
     const finalCancelButtonText = computed(() => props.cancelButtonText || t("el.popconfirm.cancelButtonText"));
+    expose({
+      popperRef,
+      hide: hidePopper
+    });
     return (_ctx, _cache) => {
       return openBlock(), createBlock(unref(ElTooltip), mergeProps({
         ref_key: "tooltipRef",
         ref: tooltipRef,
         trigger: "click",
-        effect: "light"
+        effect: _ctx.effect
       }, _ctx.$attrs, {
         "popper-class": `${unref(ns).namespace.value}-popover`,
         "popper-style": unref(style),
         teleported: _ctx.teleported,
         "fallback-placements": ["bottom", "top", "right", "left"],
         "hide-after": _ctx.hideAfter,
-        persistent: _ctx.persistent
+        persistent: _ctx.persistent,
+        loop: "",
+        onShow: showPopper
       }), {
         content: withCtx(() => [
           createElementVNode("div", {
+            ref_key: "rootRef",
+            ref: rootRef,
+            tabindex: "-1",
             class: normalizeClass(unref(ns).b())
           }, [
             createElementVNode("div", {
@@ -109,7 +127,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           _ctx.$slots.reference ? renderSlot(_ctx.$slots, "reference", { key: 0 }) : createCommentVNode("v-if", true)
         ]),
         _: 3
-      }, 16, ["popper-class", "popper-style", "teleported", "hide-after", "persistent"]);
+      }, 16, ["effect", "popper-class", "popper-style", "teleported", "hide-after", "persistent"]);
     };
   }
 });

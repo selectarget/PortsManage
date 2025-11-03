@@ -1,4 +1,4 @@
-import type { ExtractPropTypes } from 'vue';
+import type { CSSProperties, ExtractPropTypes, __ExtractPublicPropTypes } from 'vue';
 import type Sizes from './sizes.vue';
 export declare const paginationSizesProps: {
     readonly pageSize: {
@@ -14,6 +14,12 @@ export declare const paginationSizesProps: {
         readonly validator: ((val: unknown) => boolean) | undefined;
         __epPropKey: true;
     };
+    readonly popperStyle: {
+        readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | CSSProperties) | (() => string | CSSProperties) | ((new (...args: any[]) => string | CSSProperties) | (() => string | CSSProperties))[], unknown, unknown>>;
+        readonly required: false;
+        readonly validator: ((val: unknown) => boolean) | undefined;
+        __epPropKey: true;
+    };
     readonly disabled: BooleanConstructor;
     readonly teleported: BooleanConstructor;
     readonly size: {
@@ -25,4 +31,5 @@ export declare const paginationSizesProps: {
     readonly appendSizeTo: StringConstructor;
 };
 export type PaginationSizesProps = ExtractPropTypes<typeof paginationSizesProps>;
-export type SizesInstance = InstanceType<typeof Sizes>;
+export type PaginationSizesPropsPublic = __ExtractPublicPropTypes<typeof paginationSizesProps>;
+export type SizesInstance = InstanceType<typeof Sizes> & unknown;

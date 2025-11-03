@@ -3,4 +3,6 @@ export declare const composeEventHandlers: <E>(theirsHandler?: (event: E) => boo
 }) => (event: E) => void;
 type WhenMouseHandler = (e: PointerEvent) => any;
 export declare const whenMouse: (handler: WhenMouseHandler) => WhenMouseHandler;
+export declare const getEventCode: (event: KeyboardEvent) => string;
+export declare const getEventKey: (event: KeyboardEvent) => string;
 export {};

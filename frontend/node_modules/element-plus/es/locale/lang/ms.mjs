@@ -9,13 +9,19 @@ var ms = {
       clear: "Jelas",
       defaultLabel: "pemilih warna",
       description: "warna semasa ialah {warna}. tekan enter untuk memilih warna baharu.",
-      alphaLabel: "pilih nilai alfa"
+      alphaLabel: "pilih nilai alfa",
+      alphaDescription: "alpha {alpha}, current color is {color}",
+      hueLabel: "pick hue value",
+      hueDescription: "hue {hue}, current color is {color}",
+      svLabel: "pick saturation and brightness value",
+      svDescription: "saturation {saturation}, brightness {brightness}, current color is {color}",
+      predefineDescription: "select {value} as the color"
     },
     datepicker: {
       now: "Sekarang",
       today: "Hari ini",
-      Batal: "Batal",
-      clear: "Jelas",
+      cancel: "Batal",
+      clear: "Padam",
       confirm: "OK",
       dateTablePrompt: "Gunakan kekunci anak panah dan masukkan untuk memilih hari dalam bulan tersebut",
       monthTablePrompt: "Gunakan kekunci anak panah dan masukkan untuk memilih bulan",
@@ -31,7 +37,7 @@ var ms = {
       nextYear: "Tahun Depan",
       prevMonth: "Bulan Sebelumnya",
       nextMonth: "Bulan Depan",
-      year: "tahun",
+      year: "",
       month1: "Januari",
       month2: "Februari",
       month3: "Mac",
@@ -44,15 +50,14 @@ var ms = {
       month10: "Oktober",
       month11: "November",
       month12: "Disember",
-      week: "minggu",
       weeks: {
-        sun: "Sun",
-        mon: "Mon",
-        tue: "Tue",
-        wed: "Wed",
-        thu: "Thu",
-        fri: "Fri",
-        sat: "Sat"
+        sun: "Ahd",
+        mon: "Isn",
+        tue: "Sel",
+        wed: "Rab",
+        thu: "Kha",
+        fri: "Jum",
+        sat: "Sab"
       },
       weeksFull: {
         sun: "Ahad",
@@ -122,9 +127,10 @@ var ms = {
     messagebox: {
       title: "Mesej",
       confirm: "OK",
-      Batal: "Dibatalkan",
+      cancel: "Cancel",
       error: "Input haram",
-      close: "Tutup dialog ini"
+      close: "Tutup dialog ini",
+      Batal: "Dibatalkan"
     },
     upload: {
       deleteTip: "tekan padam untuk mengalih keluar",
@@ -147,7 +153,8 @@ var ms = {
     tour: {
       next: "Seterusnya",
       previous: "Sebelumnya",
-      finish: "Selesai"
+      finish: "Selesai",
+      close: "Close this dialog"
     },
     tree: {
       emptyText: "Tiada Data"
@@ -164,10 +171,11 @@ var ms = {
       error: "FAILED"
     },
     pageHeader: {
-      title: "Belakang"
+      title: "Kembali"
     },
     popconfirm: {
       confirmButtonText: "Ya",
+      cancelButtonText: "No",
       BatalButtonText: "Tidak"
     },
     carousel: {

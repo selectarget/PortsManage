@@ -30,7 +30,6 @@ exports.getComponentSize = size.getComponentSize;
 exports.isValidComponentSize = validator.isValidComponentSize;
 exports.isValidDatePickType = validator.isValidDatePickType;
 exports.PatchFlags = vnode.PatchFlags;
-exports.ensureOnlyChild = vnode.ensureOnlyChild;
 exports.flattedChildren = vnode.flattedChildren;
 exports.getFirstValidNode = vnode.getFirstValidNode;
 exports.getNormalizedProps = vnode.getNormalizedProps;

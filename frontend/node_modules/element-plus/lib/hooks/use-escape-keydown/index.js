@@ -4,12 +4,14 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var core = require('@vueuse/core');
+var event = require('../../utils/dom/event.js');
 var aria = require('../../constants/aria.js');
 
 let registeredEscapeHandlers = [];
-const cachedHandler = (event) => {
-  if (event.code === aria.EVENT_CODE.esc) {
-    registeredEscapeHandlers.forEach((registeredHandler) => registeredHandler(event));
+const cachedHandler = (event$1) => {
+  const code = event.getEventCode(event$1);
+  if (code === aria.EVENT_CODE.esc) {
+    registeredEscapeHandlers.forEach((registeredHandler) => registeredHandler(event$1));
   }
 };
 const useEscapeKeydown = (handler) => {

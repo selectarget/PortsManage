@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var vue = require('vue');
 var dayjs = require('dayjs');
+var constants = require('../constants.js');
 var panelTimePicker = require('../props/panel-time-picker.js');
 var useTimePanel = require('../composables/use-time-panel.js');
 var useTimePicker = require('../composables/use-time-picker.js');
@@ -12,6 +13,7 @@ var pluginVue_exportHelper = require('../../../../_virtual/plugin-vue_export-hel
 var index = require('../../../../hooks/use-namespace/index.js');
 var index$1 = require('../../../../hooks/use-locale/index.js');
 var types = require('../../../../utils/types.js');
+var event = require('../../../../utils/dom/event.js');
 var aria = require('../../../../constants/aria.js');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -24,7 +26,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
   emits: ["pick", "select-range", "set-picker-option"],
   setup(__props, { emit }) {
     const props = __props;
-    const pickerBase = vue.inject("EP_PICKER_BASE");
+    const pickerBase = vue.inject(constants.PICKER_BASE_INJECTION_KEY);
     const {
       arrowControl,
       disabledHours,
@@ -56,7 +58,11 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       return parsedDate.isSame(result);
     };
     const handleCancel = () => {
-      emit("pick", oldValue.value, false);
+      const old = oldValue.value;
+      emit("pick", old, false);
+      vue.nextTick(() => {
+        oldValue.value = old;
+      });
     };
     const handleConfirm = (visible = false, first = false) => {
       if (first)
@@ -75,25 +81,41 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       selectionRange.value = [start, end];
     };
     const changeSelectionRange = (step) => {
-      const list = [0, 3].concat(showSeconds.value ? [6] : []);
-      const mapping = ["hours", "minutes"].concat(showSeconds.value ? ["seconds"] : []);
+      const actualFormat = props.format;
+      const hourIndex = actualFormat.indexOf("HH");
+      const minuteIndex = actualFormat.indexOf("mm");
+      const secondIndex = actualFormat.indexOf("ss");
+      const list = [];
+      const mapping = [];
+      if (hourIndex !== -1) {
+        list.push(hourIndex);
+        mapping.push("hours");
+      }
+      if (minuteIndex !== -1) {
+        list.push(minuteIndex);
+        mapping.push("minutes");
+      }
+      if (secondIndex !== -1 && showSeconds.value) {
+        list.push(secondIndex);
+        mapping.push("seconds");
+      }
       const index = list.indexOf(selectionRange.value[0]);
       const next = (index + step + list.length) % list.length;
       timePickerOptions["start_emitSelectRange"](mapping[next]);
     };
-    const handleKeydown = (event) => {
-      const code = event.code;
+    const handleKeydown = (event$1) => {
+      const code = event.getEventCode(event$1);
       const { left, right, up, down } = aria.EVENT_CODE;
       if ([left, right].includes(code)) {
         const step = code === left ? -1 : 1;
         changeSelectionRange(step);
-        event.preventDefault();
+        event$1.preventDefault();
         return;
       }
       if ([up, down].includes(code)) {
         const step = code === up ? -1 : 1;
         timePickerOptions["start_scrollDown"](step);
-        event.preventDefault();
+        event$1.preventDefault();
         return;
       }
     };
@@ -110,16 +132,10 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
         return null;
       return dayjs__default["default"](value, props.format).locale(lang.value);
     };
-    const formatToString = (value) => {
-      if (!value)
-        return null;
-      return value.format(props.format);
-    };
     const getDefaultValue = () => {
       return dayjs__default["default"](defaultValue).locale(lang.value);
     };
     emit("set-picker-option", ["isValidValue", isValidValue]);
-    emit("set-picker-option", ["formatToString", formatToString]);
     emit("set-picker-option", ["parseUserInput", parseUserInput]);
     emit("set-picker-option", ["handleKeydownInput", handleKeydown]);
     emit("set-picker-option", ["getRangeAvailableTime", getRangeAvailableTime]);

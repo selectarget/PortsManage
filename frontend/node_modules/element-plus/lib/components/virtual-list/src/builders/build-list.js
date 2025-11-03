@@ -331,10 +331,10 @@ const createList = ({
         }
       }
       const InnerNode = [
-        vue.h(Inner, {
+        vue.h(Inner, vue.mergeProps(ctx.innerProps, {
           style: innerStyle,
           ref: "innerRef"
-        }, !shared.isString(Inner) ? {
+        }), !shared.isString(Inner) ? {
           default: () => children
         } : children)
       ];
@@ -345,7 +345,8 @@ const createList = ({
         onScroll: onScrollbarScroll,
         ratio: clientSize * 100 / this.estimatedTotalSize,
         scrollFrom: states.scrollOffset / (this.estimatedTotalSize - clientSize),
-        total
+        total,
+        alwaysOn: states.scrollbarAlwaysOn
       });
       const listContainer = vue.h(Container, {
         class: [ns.e("window"), className],

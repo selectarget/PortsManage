@@ -1,5 +1,5 @@
 import type { PopperEffect } from './popper';
-import type { ExtractPropTypes, StyleValue } from 'vue';
+import type { ExtractPropTypes, StyleValue, __ExtractPublicPropTypes } from 'vue';
 import type { Options, Placement } from '@popperjs/core';
 import type { Measurable } from './constants';
 import type Content from './content.vue';
@@ -20,7 +20,9 @@ export declare const popperCoreConfigProps: {
     readonly strategy: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "fixed" | "absolute", unknown, "absolute", boolean>;
 };
 export type PopperCoreConfigProps = ExtractPropTypes<typeof popperCoreConfigProps>;
+export type PopperCoreConfigPropsPublic = __ExtractPublicPropTypes<typeof popperCoreConfigProps>;
 export declare const popperContentProps: {
+    readonly loop: BooleanConstructor;
     readonly ariaLabel: StringConstructor;
     readonly id: StringConstructor;
     readonly style: {
@@ -39,8 +41,8 @@ export declare const popperContentProps: {
     readonly visible: BooleanConstructor;
     readonly enterable: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
     readonly pure: BooleanConstructor;
-    readonly focusOnShow: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
-    readonly trapping: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly focusOnShow: BooleanConstructor;
+    readonly trapping: BooleanConstructor;
     readonly popperClass: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | ClassObjectType | ClassType[]) | (() => ClassType) | ((new (...args: any[]) => string | ClassObjectType | ClassType[]) | (() => ClassType))[], unknown, unknown>>;
         readonly required: false;
@@ -68,6 +70,7 @@ export declare const popperContentProps: {
     readonly stopPopperMouseEvent: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
     readonly virtualTriggering: BooleanConstructor;
     readonly zIndex: NumberConstructor;
+    readonly arrowOffset: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, unknown, unknown, 5, boolean>;
     readonly boundariesPadding: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, unknown, unknown, 0, boolean>;
     readonly fallbackPlacements: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Placement[]) | (() => Placement[]) | ((new (...args: any[]) => Placement[]) | (() => Placement[]))[], unknown, unknown, undefined, boolean>;
     readonly gpuAcceleration: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
@@ -77,6 +80,7 @@ export declare const popperContentProps: {
     readonly strategy: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "fixed" | "absolute", unknown, "absolute", boolean>;
 };
 export type PopperContentProps = ExtractPropTypes<typeof popperContentProps>;
+export type PopperContentPropsPublic = __ExtractPublicPropTypes<typeof popperContentProps>;
 export declare const popperContentEmits: {
     mouseenter: (evt: MouseEvent) => boolean;
     mouseleave: (evt: MouseEvent) => boolean;
@@ -85,7 +89,7 @@ export declare const popperContentEmits: {
     close: () => boolean;
 };
 export type PopperContentEmits = typeof popperContentEmits;
-export type PopperContentInstance = InstanceType<typeof Content>;
+export type PopperContentInstance = InstanceType<typeof Content> & unknown;
 /** @deprecated use `popperCoreConfigProps` instead, and it will be deprecated in the next major version */
 export declare const usePopperCoreConfigProps: {
     readonly boundariesPadding: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, unknown, unknown, 0, boolean>;
@@ -98,6 +102,7 @@ export declare const usePopperCoreConfigProps: {
 };
 /** @deprecated use `popperContentProps` instead, and it will be deprecated in the next major version */
 export declare const usePopperContentProps: {
+    readonly loop: BooleanConstructor;
     readonly ariaLabel: StringConstructor;
     readonly id: StringConstructor;
     readonly style: {
@@ -116,8 +121,8 @@ export declare const usePopperContentProps: {
     readonly visible: BooleanConstructor;
     readonly enterable: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
     readonly pure: BooleanConstructor;
-    readonly focusOnShow: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
-    readonly trapping: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, false, boolean>;
+    readonly focusOnShow: BooleanConstructor;
+    readonly trapping: BooleanConstructor;
     readonly popperClass: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | ClassObjectType | ClassType[]) | (() => ClassType) | ((new (...args: any[]) => string | ClassObjectType | ClassType[]) | (() => ClassType))[], unknown, unknown>>;
         readonly required: false;
@@ -145,6 +150,7 @@ export declare const usePopperContentProps: {
     readonly stopPopperMouseEvent: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
     readonly virtualTriggering: BooleanConstructor;
     readonly zIndex: NumberConstructor;
+    readonly arrowOffset: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, unknown, unknown, 5, boolean>;
     readonly boundariesPadding: import("element-plus/es/utils").EpPropFinalized<NumberConstructor, unknown, unknown, 0, boolean>;
     readonly fallbackPlacements: import("element-plus/es/utils").EpPropFinalized<(new (...args: any[]) => Placement[]) | (() => Placement[]) | ((new (...args: any[]) => Placement[]) | (() => Placement[]))[], unknown, unknown, undefined, boolean>;
     readonly gpuAcceleration: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;

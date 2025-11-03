@@ -19,11 +19,20 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
   ...__default__,
   props: popconfirm.popconfirmProps,
   emits: popconfirm.popconfirmEmits,
-  setup(__props, { emit }) {
+  setup(__props, { expose, emit }) {
     const props = __props;
     const { t } = index.useLocale();
     const ns = index$1.useNamespace("popconfirm");
     const tooltipRef = vue.ref();
+    const rootRef = vue.ref();
+    const popperRef = vue.computed(() => {
+      var _a;
+      return (_a = vue.unref(tooltipRef)) == null ? void 0 : _a.popperRef;
+    });
+    const showPopper = () => {
+      var _a, _b;
+      (_b = (_a = rootRef.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
+    };
     const hidePopper = () => {
       var _a, _b;
       (_b = (_a = tooltipRef.value) == null ? void 0 : _a.onClose) == null ? void 0 : _b.call(_a);
@@ -43,22 +52,31 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     };
     const finalConfirmButtonText = vue.computed(() => props.confirmButtonText || t("el.popconfirm.confirmButtonText"));
     const finalCancelButtonText = vue.computed(() => props.cancelButtonText || t("el.popconfirm.cancelButtonText"));
+    expose({
+      popperRef,
+      hide: hidePopper
+    });
     return (_ctx, _cache) => {
       return vue.openBlock(), vue.createBlock(vue.unref(index$2.ElTooltip), vue.mergeProps({
         ref_key: "tooltipRef",
         ref: tooltipRef,
         trigger: "click",
-        effect: "light"
+        effect: _ctx.effect
       }, _ctx.$attrs, {
         "popper-class": `${vue.unref(ns).namespace.value}-popover`,
         "popper-style": vue.unref(style$1),
         teleported: _ctx.teleported,
         "fallback-placements": ["bottom", "top", "right", "left"],
         "hide-after": _ctx.hideAfter,
-        persistent: _ctx.persistent
+        persistent: _ctx.persistent,
+        loop: "",
+        onShow: showPopper
       }), {
         content: vue.withCtx(() => [
           vue.createElementVNode("div", {
+            ref_key: "rootRef",
+            ref: rootRef,
+            tabindex: "-1",
             class: vue.normalizeClass(vue.unref(ns).b())
           }, [
             vue.createElementVNode("div", {
@@ -113,7 +131,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
           _ctx.$slots.reference ? vue.renderSlot(_ctx.$slots, "reference", { key: 0 }) : vue.createCommentVNode("v-if", true)
         ]),
         _: 3
-      }, 16, ["popper-class", "popper-style", "teleported", "hide-after", "persistent"]);
+      }, 16, ["effect", "popper-class", "popper-style", "teleported", "hide-after", "persistent"]);
     };
   }
 });

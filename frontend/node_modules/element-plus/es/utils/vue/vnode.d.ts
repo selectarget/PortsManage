@@ -1,5 +1,5 @@
 import { createBlock } from 'vue';
-import type { VNode, VNodeArrayChildren, VNodeChild, VNodeNormalizedChildren } from 'vue';
+import type { VNode, VNodeChild, VNodeNormalizedChildren } from 'vue';
 export declare enum PatchFlags {
     TEXT = 1,
     CLASS = 2,
@@ -33,7 +33,7 @@ export declare function isValidElementNode(node: VNode): boolean;
 export declare function isValidElementNode(node: unknown): node is VNode;
 export declare const getFirstValidNode: (nodes: VNodeNormalizedChildren, maxDepth?: number) => string | number | boolean | void | VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}> | VNodeArrayChildren | {
+}> | import("vue").VNodeArrayChildren | {
     [name: string]: unknown;
     $stable?: boolean;
 } | null | undefined;
@@ -44,8 +44,5 @@ export declare function renderBlock(...args: Parameters<typeof createBlock>): VN
     [key: string]: any;
 }>;
 export declare const getNormalizedProps: (node: VNode) => Record<string, any>;
-export declare const ensureOnlyChild: (children: VNodeArrayChildren | undefined) => (string | number | boolean | void | VNode<import("vue").RendererNode, import("vue").RendererElement, {
-    [key: string]: any;
-}> | null | undefined) | VNodeArrayChildren;
 export type FlattenVNodes = Array<VNodeChildAtom | RawSlots>;
 export declare const flattedChildren: (children: FlattenVNodes | VNode | VNodeNormalizedChildren) => FlattenVNodes;

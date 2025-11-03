@@ -9,6 +9,8 @@ declare const props: {
     };
     hoveringIndex: NumberConstructor;
     width: NumberConstructor;
+    id: StringConstructor;
+    ariaLabel: StringConstructor;
 };
 interface SelectDropdownExposed {
     listRef: Ref<FixedSizeListInstance | DynamicSizeListInstance | undefined>;
@@ -28,6 +30,8 @@ declare const _default: import("vue").DefineComponent<{
     };
     hoveringIndex: NumberConstructor;
     width: NumberConstructor;
+    id: StringConstructor;
+    ariaLabel: StringConstructor;
 }, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<ExtractPropTypes<{
     loading: BooleanConstructor;
     data: {
@@ -36,6 +40,8 @@ declare const _default: import("vue").DefineComponent<{
     };
     hoveringIndex: NumberConstructor;
     width: NumberConstructor;
+    id: StringConstructor;
+    ariaLabel: StringConstructor;
 }>>, {
     loading: boolean;
 }>;

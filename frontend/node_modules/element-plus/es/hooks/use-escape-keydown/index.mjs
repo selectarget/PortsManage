@@ -1,10 +1,12 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import { isClient } from '@vueuse/core';
+import { getEventCode } from '../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../constants/aria.mjs';
 
 let registeredEscapeHandlers = [];
 const cachedHandler = (event) => {
-  if (event.code === EVENT_CODE.esc) {
+  const code = getEventCode(event);
+  if (code === EVENT_CODE.esc) {
     registeredEscapeHandlers.forEach((registeredHandler) => registeredHandler(event));
   }
 };

@@ -1,13 +1,13 @@
-import type { ExtractPropTypes } from 'vue';
+import type { ExtractPropTypes, __ExtractPublicPropTypes } from 'vue';
 import type { Arrayable } from 'element-plus/es/utils';
 import type { FormItemRule } from './types';
 export declare const formItemValidateStates: readonly ["", "error", "validating", "success"];
-export type FormItemValidateState = typeof formItemValidateStates[number];
+export type FormItemValidateState = (typeof formItemValidateStates)[number];
 export type FormItemProp = Arrayable<string>;
 export declare const formItemProps: {
     readonly label: StringConstructor;
     readonly labelWidth: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, NumberConstructor], unknown, unknown, "", boolean>;
-    readonly labelPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "" | "top" | "left" | "right", unknown, "", boolean>;
+    readonly labelPosition: import("element-plus/es/utils").EpPropFinalized<StringConstructor, "" | "left" | "right" | "top", unknown, "", boolean>;
     readonly prop: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | string[]) | (() => FormItemProp) | ((new (...args: any[]) => string | string[]) | (() => FormItemProp))[], unknown, unknown>>;
         readonly required: false;
@@ -29,7 +29,7 @@ export declare const formItemProps: {
         __epPropKey: true;
     };
     readonly for: StringConstructor;
-    readonly inlineMessage: import("element-plus/es/utils").EpPropFinalized<readonly [StringConstructor, BooleanConstructor], unknown, unknown, "", boolean>;
+    readonly inlineMessage: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, undefined, boolean>;
     readonly showMessage: import("element-plus/es/utils").EpPropFinalized<BooleanConstructor, unknown, unknown, true, boolean>;
     readonly size: {
         readonly type: import("vue").PropType<import("element-plus/es/utils").EpPropMergeType<StringConstructor, "" | "small" | "default" | "large", unknown>>;
@@ -39,3 +39,4 @@ export declare const formItemProps: {
     };
 };
 export type FormItemProps = ExtractPropTypes<typeof formItemProps>;
+export type FormItemPropsPublic = __ExtractPublicPropTypes<typeof formItemProps>;

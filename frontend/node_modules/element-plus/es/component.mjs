@@ -16,10 +16,12 @@ import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup } from './components/chec
 import { ElCol } from './components/col/index.mjs';
 import { ElCollapse, ElCollapseItem } from './components/collapse/index.mjs';
 import { ElCollapseTransition } from './components/collapse-transition/index.mjs';
+import { ElColorPickerPanel } from './components/color-picker-panel/index.mjs';
 import { ElColorPicker } from './components/color-picker/index.mjs';
 import { ElConfigProvider } from './components/config-provider/index.mjs';
 import { ElContainer, ElAside, ElFooter, ElHeader, ElMain } from './components/container/index.mjs';
 import { ElDatePicker } from './components/date-picker/index.mjs';
+import { ElDatePickerPanel } from './components/date-picker-panel/index.mjs';
 import { ElDescriptions, ElDescriptionsItem } from './components/descriptions/index.mjs';
 import { ElDialog } from './components/dialog/index.mjs';
 import { ElDivider } from './components/divider/index.mjs';
@@ -64,7 +66,6 @@ import { ElTimePicker } from './components/time-picker/index.mjs';
 import { ElTimeSelect } from './components/time-select/index.mjs';
 import { ElTimeline, ElTimelineItem } from './components/timeline/index.mjs';
 import { ElTooltip } from './components/tooltip/index.mjs';
-import { ElTooltipV2 } from './components/tooltip-v2/index.mjs';
 import { ElTransfer } from './components/transfer/index.mjs';
 import { ElTree } from './components/tree/index.mjs';
 import { ElTreeSelect } from './components/tree-select/index.mjs';
@@ -75,6 +76,7 @@ import { ElTour, ElTourStep } from './components/tour/index.mjs';
 import { ElAnchor, ElAnchorLink } from './components/anchor/index.mjs';
 import { ElSegmented } from './components/segmented/index.mjs';
 import { ElMention } from './components/mention/index.mjs';
+import { ElSplitter, ElSplitterPanel } from './components/splitter/index.mjs';
 
 var Components = [
   ElAffix,
@@ -102,6 +104,7 @@ var Components = [
   ElCollapse,
   ElCollapseItem,
   ElCollapseTransition,
+  ElColorPickerPanel,
   ElColorPicker,
   ElConfigProvider,
   ElContainer,
@@ -110,6 +113,7 @@ var Components = [
   ElHeader,
   ElMain,
   ElDatePicker,
+  ElDatePickerPanel,
   ElDescriptions,
   ElDescriptionsItem,
   ElDialog,
@@ -170,7 +174,6 @@ var Components = [
   ElTimeline,
   ElTimelineItem,
   ElTooltip,
-  ElTooltipV2,
   ElTransfer,
   ElTree,
   ElTreeSelect,
@@ -182,7 +185,9 @@ var Components = [
   ElAnchor,
   ElAnchorLink,
   ElSegmented,
-  ElMention
+  ElMention,
+  ElSplitter,
+  ElSplitterPanel
 ];
 
 export { Components as default };

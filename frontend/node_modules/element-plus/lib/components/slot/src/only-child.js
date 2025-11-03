@@ -23,14 +23,13 @@ const OnlyChild = vue.defineComponent({
       const defaultSlot = (_a2 = slots.default) == null ? void 0 : _a2.call(slots, attrs);
       if (!defaultSlot)
         return null;
-      if (defaultSlot.length > 1) {
-        error.debugWarn(NAME, "requires exact only one valid child.");
-        return null;
-      }
-      const firstLegitNode = findFirstLegitChild(defaultSlot);
+      const [firstLegitNode, length] = findFirstLegitChild(defaultSlot);
       if (!firstLegitNode) {
         error.debugWarn(NAME, "no valid child node found");
         return null;
+      }
+      if (length > 1) {
+        error.debugWarn(NAME, "requires exact only one valid child.");
       }
       return vue.withDirectives(vue.cloneVNode(firstLegitNode, attrs), [[forwardRefDirective]]);
     };
@@ -38,8 +37,9 @@ const OnlyChild = vue.defineComponent({
 });
 function findFirstLegitChild(node) {
   if (!node)
-    return null;
+    return [null, 0];
   const children = node;
+  const len = children.filter((c) => c.type !== vue.Comment).length;
   for (const child of children) {
     if (shared.isObject(child)) {
       switch (child.type) {
@@ -47,16 +47,16 @@ function findFirstLegitChild(node) {
           continue;
         case vue.Text:
         case "svg":
-          return wrapTextContent(child);
+          return [wrapTextContent(child), len];
         case vue.Fragment:
           return findFirstLegitChild(child.children);
         default:
-          return child;
+          return [child, len];
       }
     }
-    return wrapTextContent(child);
+    return [wrapTextContent(child), len];
   }
-  return null;
+  return [null, 0];
 }
 function wrapTextContent(s) {
   const ns = index$1.useNamespace("only-child");

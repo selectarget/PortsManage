@@ -1,12 +1,14 @@
 import { watch } from 'vue';
 import { isClient, useEventListener } from '@vueuse/core';
+import { getEventCode } from '../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../constants/aria.mjs';
 
 const modalStack = [];
 const closeModal = (e) => {
   if (modalStack.length === 0)
     return;
-  if (e.code === EVENT_CODE.esc) {
+  const code = getEventCode(e);
+  if (code === EVENT_CODE.esc) {
     e.stopPropagation();
     const topModal = modalStack[modalStack.length - 1];
     topModal.handleClose();

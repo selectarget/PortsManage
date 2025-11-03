@@ -42,11 +42,8 @@ const RowRenderer = (props, {
   const depth = depthMap[_rowKey] || 0;
   const canExpand = Boolean(expandColumnKey);
   const isFixedRow = rowIndex < 0;
-  const kls = [ns.e("row"), rowKls, {
-    [ns.e(`row-depth-${depth}`)]: canExpand && rowIndex >= 0,
-    [ns.is("expanded")]: canExpand && expandedRowKeys.includes(_rowKey),
-    [ns.is("fixed")]: !depth && isFixedRow,
-    [ns.is("customized")]: Boolean(slots.row)
+  const kls = [ns.e("row"), rowKls, ns.is("expanded", canExpand && expandedRowKeys.includes(_rowKey)), ns.is("fixed", !depth && isFixedRow), ns.is("customized", Boolean(slots.row)), {
+    [ns.e(`row-depth-${depth}`)]: canExpand && rowIndex >= 0
   }];
   const onRowHover = hasFixedColumns ? onRowHovered : void 0;
   const _rowProps = {
@@ -64,7 +61,7 @@ const RowRenderer = (props, {
     rowEventHandlers,
     style
   };
-  const handlerMosueEnter = (e) => {
+  const handlerMouseEnter = (e) => {
     onRowHover == null ? void 0 : onRowHover({
       hovered: true,
       rowKey: _rowKey,
@@ -84,7 +81,7 @@ const RowRenderer = (props, {
   };
   return createVNode(Row$1, mergeProps(_rowProps, {
     "onRowExpand": onRowExpanded,
-    "onMouseenter": handlerMosueEnter,
+    "onMouseenter": handlerMouseEnter,
     "onMouseleave": handlerMouseLeave,
     "rowkey": _rowKey
   }), _isSlot(slots) ? slots : {

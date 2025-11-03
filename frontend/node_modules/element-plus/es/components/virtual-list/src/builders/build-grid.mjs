@@ -1,4 +1,4 @@
-import { defineComponent, getCurrentInstance, ref, computed, unref, onMounted, nextTick, resolveDynamicComponent, h, Fragment } from 'vue';
+import { defineComponent, getCurrentInstance, ref, computed, unref, onMounted, nextTick, resolveDynamicComponent, h, mergeProps, Fragment } from 'vue';
 import { useEventListener, isClient } from '@vueuse/core';
 import ScrollBar from '../components/scrollbar.mjs';
 import { useGridWheel } from '../hooks/use-grid-wheel.mjs';
@@ -411,10 +411,10 @@ const createGrid = ({
         const Inner = resolveDynamicComponent(props.innerElement);
         const children = renderItems();
         return [
-          h(Inner, {
+          h(Inner, mergeProps(props.innerProps, {
             style: unref(innerStyle),
             ref: innerRef
-          }, !isString(Inner) ? {
+          }), !isString(Inner) ? {
             default: () => children
           } : children)
         ];

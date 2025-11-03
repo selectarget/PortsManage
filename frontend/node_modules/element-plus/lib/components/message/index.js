@@ -8,8 +8,10 @@ var install = require('../../utils/vue/install.js');
 
 const ElMessage = install.withInstallFunction(method["default"], "$message");
 
+exports.MESSAGE_DEFAULT_PLACEMENT = message.MESSAGE_DEFAULT_PLACEMENT;
 exports.messageDefaults = message.messageDefaults;
 exports.messageEmits = message.messageEmits;
+exports.messagePlacement = message.messagePlacement;
 exports.messageProps = message.messageProps;
 exports.messageTypes = message.messageTypes;
 exports.ElMessage = ElMessage;

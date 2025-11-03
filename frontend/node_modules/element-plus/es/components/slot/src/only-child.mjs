@@ -1,4 +1,4 @@
-import { defineComponent, inject, withDirectives, cloneVNode, Fragment, createVNode, Text, Comment } from 'vue';
+import { defineComponent, inject, withDirectives, cloneVNode, Comment, Fragment, createVNode, Text } from 'vue';
 import { FORWARD_REF_INJECTION_KEY, useForwardRefDirective } from '../../../hooks/use-forward-ref/index.mjs';
 import { NOOP, isObject } from '@vue/shared';
 import { debugWarn } from '../../../utils/error.mjs';
@@ -19,14 +19,13 @@ const OnlyChild = defineComponent({
       const defaultSlot = (_a2 = slots.default) == null ? void 0 : _a2.call(slots, attrs);
       if (!defaultSlot)
         return null;
-      if (defaultSlot.length > 1) {
-        debugWarn(NAME, "requires exact only one valid child.");
-        return null;
-      }
-      const firstLegitNode = findFirstLegitChild(defaultSlot);
+      const [firstLegitNode, length] = findFirstLegitChild(defaultSlot);
       if (!firstLegitNode) {
         debugWarn(NAME, "no valid child node found");
         return null;
+      }
+      if (length > 1) {
+        debugWarn(NAME, "requires exact only one valid child.");
       }
       return withDirectives(cloneVNode(firstLegitNode, attrs), [[forwardRefDirective]]);
     };
@@ -34,8 +33,9 @@ const OnlyChild = defineComponent({
 });
 function findFirstLegitChild(node) {
   if (!node)
-    return null;
+    return [null, 0];
   const children = node;
+  const len = children.filter((c) => c.type !== Comment).length;
   for (const child of children) {
     if (isObject(child)) {
       switch (child.type) {
@@ -43,16 +43,16 @@ function findFirstLegitChild(node) {
           continue;
         case Text:
         case "svg":
-          return wrapTextContent(child);
+          return [wrapTextContent(child), len];
         case Fragment:
           return findFirstLegitChild(child.children);
         default:
-          return child;
+          return [child, len];
       }
     }
-    return wrapTextContent(child);
+    return [wrapTextContent(child), len];
   }
-  return null;
+  return [null, 0];
 }
 function wrapTextContent(s) {
   const ns = useNamespace("only-child");

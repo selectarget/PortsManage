@@ -1,4 +1,5 @@
 import SubMenu from './submenu.mjs';
+import { getEventCode } from '../../../../utils/dom/event.mjs';
 import { EVENT_CODE } from '../../../../constants/aria.mjs';
 import { triggerEvent } from '../../../../utils/dom/aria.mjs';
 
@@ -19,8 +20,9 @@ class MenuItem {
   }
   addListeners() {
     this.domNode.addEventListener("keydown", (event) => {
+      const code = getEventCode(event);
       let prevDef = false;
-      switch (event.code) {
+      switch (code) {
         case EVENT_CODE.down: {
           triggerEvent(event.currentTarget, "mouseenter");
           this.submenu && this.submenu.gotoSubIndex(0);

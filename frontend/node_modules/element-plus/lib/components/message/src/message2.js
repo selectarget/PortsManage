@@ -11,6 +11,7 @@ var instance = require('./instance.js');
 var pluginVue_exportHelper = require('../../../_virtual/plugin-vue_export-helper.js');
 var useGlobalConfig = require('../../config-provider/src/hooks/use-global-config.js');
 var icon = require('../../../utils/vue/icon.js');
+var event = require('../../../utils/dom/event.js');
 var aria = require('../../../constants/aria.js');
 
 const __default__ = vue.defineComponent({
@@ -20,9 +21,10 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
   ...__default__,
   props: message.messageProps,
   emits: message.messageEmits,
-  setup(__props, { expose }) {
+  setup(__props, { expose, emit }) {
     const props = __props;
     const { Close } = icon.TypeComponents;
+    const isStartTransition = vue.ref(false);
     const { ns, zIndex } = useGlobalConfig.useGlobalComponentSettings("message");
     const { currentZIndex, nextZIndex } = zIndex;
     const messageRef = vue.ref();
@@ -35,11 +37,22 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       return { [ns.bm("icon", type)]: type && icon.TypeComponentsMap[type] };
     });
     const iconComponent = vue.computed(() => props.icon || icon.TypeComponentsMap[props.type] || "");
-    const lastOffset = vue.computed(() => instance.getLastOffset(props.id));
-    const offset = vue.computed(() => instance.getOffsetOrSpace(props.id, props.offset) + lastOffset.value);
+    const placement = vue.computed(() => props.placement || message.MESSAGE_DEFAULT_PLACEMENT);
+    const lastOffset = vue.computed(() => instance.getLastOffset(props.id, placement.value));
+    const offset = vue.computed(() => {
+      return instance.getOffsetOrSpace(props.id, props.offset, placement.value) + lastOffset.value;
+    });
     const bottom = vue.computed(() => height.value + offset.value);
+    const horizontalClass = vue.computed(() => {
+      if (placement.value.includes("left"))
+        return ns.is("left");
+      if (placement.value.includes("right"))
+        return ns.is("right");
+      return ns.is("center");
+    });
+    const verticalProperty = vue.computed(() => placement.value.startsWith("top") ? "top" : "bottom");
     const customStyle = vue.computed(() => ({
-      top: `${offset.value}px`,
+      [verticalProperty.value]: `${offset.value}px`,
       zIndex: currentZIndex.value
     }));
     function startTimer() {
@@ -54,8 +67,16 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     }
     function close() {
       visible.value = false;
+      vue.nextTick(() => {
+        var _a;
+        if (!isStartTransition.value) {
+          (_a = props.onClose) == null ? void 0 : _a.call(props);
+          emit("destroy");
+        }
+      });
     }
-    function keydown({ code }) {
+    function keydown(event$1) {
+      const code = event.getEventCode(event$1);
       if (code === aria.EVENT_CODE.esc) {
         close();
       }
@@ -81,6 +102,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     return (_ctx, _cache) => {
       return vue.openBlock(), vue.createBlock(vue.Transition, {
         name: vue.unref(ns).b("fade"),
+        onBeforeEnter: ($event) => isStartTransition.value = true,
         onBeforeLeave: _ctx.onClose,
         onAfterLeave: ($event) => _ctx.$emit("destroy"),
         persisted: ""
@@ -93,9 +115,10 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
             class: vue.normalizeClass([
               vue.unref(ns).b(),
               { [vue.unref(ns).m(_ctx.type)]: _ctx.type },
-              vue.unref(ns).is("center", _ctx.center),
               vue.unref(ns).is("closable", _ctx.showClose),
               vue.unref(ns).is("plain", _ctx.plain),
+              vue.unref(ns).is("bottom", vue.unref(verticalProperty) === "bottom"),
+              vue.unref(horizontalClass),
               _ctx.customClass
             ]),
             style: vue.normalizeStyle(vue.unref(customStyle)),
@@ -145,7 +168,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
           ])
         ]),
         _: 3
-      }, 8, ["name", "onBeforeLeave", "onAfterLeave"]);
+      }, 8, ["name", "onBeforeEnter", "onBeforeLeave", "onAfterLeave"]);
     };
   }
 });

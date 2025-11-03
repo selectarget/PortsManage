@@ -13,7 +13,7 @@ const useStops = (props, initData, minValue, maxValue) => {
       error.debugWarn("ElSlider", "step should not be 0.");
       return [];
     }
-    const stopCount = (props.max - props.min) / props.step;
+    const stopCount = Math.ceil((props.max - props.min) / props.step);
     const stepWidth = 100 * props.step / (props.max - props.min);
     const result = Array.from({ length: stopCount - 1 }).map((_, index) => (index + 1) * stepWidth);
     if (props.range) {

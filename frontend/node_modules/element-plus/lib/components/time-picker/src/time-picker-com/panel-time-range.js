@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var dayjs = require('dayjs');
 var lodashUnified = require('lodash-unified');
+var constants = require('../constants.js');
 var panelTimeRange = require('../props/panel-time-range.js');
 var useTimePanel = require('../composables/use-time-panel.js');
 var useTimePicker = require('../composables/use-time-picker.js');
@@ -12,6 +13,7 @@ var basicTimeSpinner = require('./basic-time-spinner.js');
 var pluginVue_exportHelper = require('../../../../_virtual/plugin-vue_export-helper.js');
 var index = require('../../../../hooks/use-locale/index.js');
 var index$1 = require('../../../../hooks/use-namespace/index.js');
+var event = require('../../../../utils/dom/event.js');
 var shared = require('@vue/shared');
 var aria = require('../../../../constants/aria.js');
 
@@ -35,7 +37,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     const { t, lang } = index.useLocale();
     const nsTime = index$1.useNamespace("time");
     const nsPicker = index$1.useNamespace("picker");
-    const pickerBase = vue.inject("EP_PICKER_BASE");
+    const pickerBase = vue.inject(constants.PICKER_BASE_INJECTION_KEY);
     const {
       arrowControl,
       disabledHours,
@@ -59,7 +61,11 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     const endTime = vue.computed(() => props.parsedValue[1]);
     const oldValue = useTimePicker.useOldValue(props);
     const handleCancel = () => {
-      emit("pick", oldValue.value, false);
+      const old = oldValue.value;
+      emit("pick", old, false);
+      vue.nextTick(() => {
+        oldValue.value = old;
+      });
     };
     const showSeconds = vue.computed(() => {
       return props.format.includes("ss");
@@ -117,20 +123,20 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
         timePickerOptions["end_emitSelectRange"](mapping[next - half]);
       }
     };
-    const handleKeydown = (event) => {
-      const code = event.code;
+    const handleKeydown = (event$1) => {
+      const code = event.getEventCode(event$1);
       const { left, right, up, down } = aria.EVENT_CODE;
       if ([left, right].includes(code)) {
         const step = code === left ? -1 : 1;
         changeSelectionRange(step);
-        event.preventDefault();
+        event$1.preventDefault();
         return;
       }
       if ([up, down].includes(code)) {
         const step = code === up ? -1 : 1;
         const role = selectionRange.value[0] < offset.value ? "start" : "end";
         timePickerOptions[`${role}_scrollDown`](step);
-        event.preventDefault();
+        event$1.preventDefault();
         return;
       }
     };
@@ -191,14 +197,6 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       }
       return dayjs__default["default"](days, props.format).locale(lang.value);
     };
-    const formatToString = (days) => {
-      if (!days)
-        return null;
-      if (shared.isArray(days)) {
-        return days.map((d) => d.format(props.format));
-      }
-      return days.format(props.format);
-    };
     const getDefaultValue = () => {
       if (shared.isArray(defaultValue)) {
         return defaultValue.map((d) => dayjs__default["default"](d).locale(lang.value));
@@ -206,7 +204,6 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       const defaultDay = dayjs__default["default"](defaultValue).locale(lang.value);
       return [defaultDay, defaultDay.add(60, "m")];
     };
-    emit("set-picker-option", ["formatToString", formatToString]);
     emit("set-picker-option", ["parseUserInput", parseUserInput]);
     emit("set-picker-option", ["isValidValue", isValidValue]);
     emit("set-picker-option", ["handleKeydownInput", handleKeydown]);

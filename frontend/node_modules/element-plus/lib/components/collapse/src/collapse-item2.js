@@ -29,6 +29,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       arrowKls,
       headKls,
       rootKls,
+      itemTitleKls,
       itemWrapperKls,
       itemContentKls,
       scopedContentId,
@@ -41,22 +42,27 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
       return vue.openBlock(), vue.createElementBlock("div", {
         class: vue.normalizeClass(vue.unref(rootKls))
       }, [
-        vue.createElementVNode("button", {
+        vue.createElementVNode("div", {
           id: vue.unref(scopedHeadId),
           class: vue.normalizeClass(vue.unref(headKls)),
           "aria-expanded": vue.unref(isActive),
           "aria-controls": vue.unref(scopedContentId),
           "aria-describedby": vue.unref(scopedContentId),
-          tabindex: _ctx.disabled ? -1 : 0,
-          type: "button",
+          tabindex: _ctx.disabled ? void 0 : 0,
+          "aria-disabled": _ctx.disabled,
+          role: "button",
           onClick: vue.unref(handleHeaderClick),
-          onKeydown: vue.withKeys(vue.withModifiers(vue.unref(handleEnterClick), ["stop", "prevent"]), ["space", "enter"]),
+          onKeydown: vue.withKeys(vue.withModifiers(vue.unref(handleEnterClick), ["stop"]), ["space", "enter"]),
           onFocus: vue.unref(handleFocus),
           onBlur: ($event) => focusing.value = false
         }, [
-          vue.renderSlot(_ctx.$slots, "title", {}, () => [
-            vue.createTextVNode(vue.toDisplayString(_ctx.title), 1)
-          ]),
+          vue.createElementVNode("span", {
+            class: vue.normalizeClass(vue.unref(itemTitleKls))
+          }, [
+            vue.renderSlot(_ctx.$slots, "title", { isActive: vue.unref(isActive) }, () => [
+              vue.createTextVNode(vue.toDisplayString(_ctx.title), 1)
+            ])
+          ], 2),
           vue.renderSlot(_ctx.$slots, "icon", { isActive: vue.unref(isActive) }, () => [
             vue.createVNode(vue.unref(index.ElIcon), {
               class: vue.normalizeClass(vue.unref(arrowKls))
@@ -67,7 +73,7 @@ const _sfc_main = /* @__PURE__ */ vue.defineComponent({
               _: 1
             }, 8, ["class"])
           ])
-        ], 42, ["id", "aria-expanded", "aria-controls", "aria-describedby", "tabindex", "onClick", "onKeydown", "onFocus", "onBlur"]),
+        ], 42, ["id", "aria-expanded", "aria-controls", "aria-describedby", "tabindex", "aria-disabled", "onClick", "onKeydown", "onFocus", "onBlur"]),
         vue.createVNode(vue.unref(index$1.ElCollapseTransition), null, {
           default: vue.withCtx(() => [
             vue.withDirectives(vue.createElementVNode("div", {
